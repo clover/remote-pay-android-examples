@@ -1,0 +1,9 @@
+<resources>
+  <string name="app_name">Clover Simple Example</string>
+  <string name="connection_successful">Connection Successful!!!</string>
+  <string name="disconnected">Disconnected</string>
+  <string name="make_sale">Make Sale</string>
+  <string name="make_refund">Make Refund</string>
+  <string name="show_message">Show Message</string>
+  <string name="title_activity_main2">Main2Activity</string>
+</resources>
