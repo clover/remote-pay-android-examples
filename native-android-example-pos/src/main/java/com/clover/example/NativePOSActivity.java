@@ -112,6 +112,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
   final PaymentConfirmationListener paymentConfirmationListener = new PaymentConfirmationListener() {
     @Override
     public void onRejectClicked(Challenge challenge) { // Reject payment and send the challenge along for logging/reason
+      Log.d(TAG, "Rejecting Challenge: " + challenge);
       paymentConnector.rejectPayment(currentPayment, challenge);
       currentChallenges = null;
       currentPayment = null;
@@ -120,6 +121,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
     @Override
     public void onAcceptClicked(final int challengeIndex) {
       if (challengeIndex == currentChallenges.size() - 1) { // no more challenges, so accept the payment
+        Log.d(TAG, "Accepting Payment: " + currentPayment);
         paymentConnector.acceptPayment(currentPayment);
         currentChallenges = null;
         currentPayment = null;
@@ -141,7 +143,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
         @Override
         public void run() {
           Toast.makeText(NativePOSActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
-          Log.d(TAG, "disconnected");
+          Log.d(TAG, "onDeviceDisconnected");
           ((TextView) findViewById(R.id.ConnectionStatusLabel)).setText("Disconnected");
         }
       });
@@ -149,11 +151,11 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
     }
 
     public void onDeviceConnected() {
-
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
           showMessage("Ready!", Toast.LENGTH_SHORT);
+          Log.d(TAG, "onDeviceConnected");
           ((TextView) findViewById(R.id.ConnectionStatusLabel)).setText("Connected!");
         }
       });
@@ -161,7 +163,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onAuthResponse(final AuthResponse response) {
-      Log.d(TAG, response.toString());
+      Log.d(TAG, "onAuthResponse: "+ response.toString());
       if (response.getSuccess()) {
         runOnUiThread(new Runnable() {
           @Override
@@ -195,11 +197,11 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onPreAuthResponse(final PreAuthResponse response) {
+      Log.d(TAG, "onPreAuthResponse: " + response.toString());
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
           if (response.getSuccess()) {
-            Log.d("NATIVEPOS", response.toString());
             Payment _payment = response.getPayment();
             CardTransaction cardTransaction = _payment.getCardTransaction();
             String cardDetails = cardTransaction.getCardType().toString() + " " + cardTransaction.getLast4();
@@ -223,8 +225,8 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onTipAdjustAuthResponse(TipAdjustAuthResponse response) {
+      Log.d(TAG, "onTipAdjustAuthResponse: " + response.toString());
       if (response.getSuccess()) {
-
         boolean updatedTip = false;
         for (POSOrder order : store.getOrders()) {
           for (POSTransaction exchange : order.getPayments()) {
@@ -251,7 +253,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onCapturePreAuthResponse(final CapturePreAuthResponse response) {
-      Log.d(TAG, response.toString());
+      Log.d(TAG, "onCapturePreAuthResponse: " + response.toString());
       if (response.getSuccess()) {
         for(final POSOrder order: store.getOrders()) {
           final POSPayment payment = order.getPreAuth();
@@ -295,7 +297,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onVerifySignatureRequest(VerifySignatureRequest request) {
-
+      Log.d(TAG, "onVerifySignatureRequest: " + request.toString());
       FragmentManager fragmentManager = getFragmentManager();
       FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -315,6 +317,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onConfirmPaymentRequest(ConfirmPaymentRequest request) {
+      Log.d(TAG, "onConfirmPaymentRequest: " + request.toString());
       if (request.getPayment() == null || request.getChallenges() == null) {
         showMessage("Error: The ConfirmPaymentRequest was missing the payment and/or challenges.", Toast.LENGTH_LONG);
       } else {
@@ -331,7 +334,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onSaleResponse(final SaleResponse response) {
-      Log.d(TAG, response.toString());
+      Log.d(TAG, "onSaleResponse: " + response.toString());
       if (response != null) {
         if (response.getSuccess()) { // Handle cancel response
           if (response.getPayment() != null) {
@@ -377,6 +380,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onManualRefundResponse(final ManualRefundResponse response) {
+      Log.d(TAG, "onManualRefundResponse: " + response);
       if (response.getSuccess()) {
         Credit credit = response.getCredit();
         CardTransaction cardTransaction = credit.getCardTransaction();
@@ -402,6 +406,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onRefundPaymentResponse(final RefundPaymentResponse response) {
+      Log.d(TAG, "onRefundPaymentResponse: " + response.toString());
       if (response.getSuccess()) {
         POSRefund refund = new POSRefund(response.getRefund().getId(), response.getRefund().getPayment().getId(), response.getOrderId(), "DEFAULT", response.getRefund().getAmount());
         refund.setDate(new Date(response.getRefund().getCreatedTime()));
@@ -455,6 +460,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onVoidPaymentResponse(VoidPaymentResponse response) {
+      Log.d(TAG, "onVoidPaymentResposne: " + response.toString());
       if (response.getSuccess()) {
         boolean done = false;
         for (POSOrder order : store.getOrders()) {
@@ -488,6 +494,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onVaultCardResponse(final VaultCardResponse response) {
+      Log.d(TAG, "onVaultCardResponse: " + response.toString());
       if (response.getSuccess())  {
         POSCard card = new POSCard();
         card.setFirst6(response.getCard().getFirst6());
@@ -513,6 +520,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onReadCardDataResponse(final ReadCardDataResponse response) {
+      Log.d(TAG, "onReadCardDataResponse: " + response.toString());
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
@@ -577,7 +585,6 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
               data.addAll(new RowData("Masked Track 2", cardData.getMaskedTrack2()));
               data.addAll(new RowData("Masked Track 3", cardData.getMaskedTrack3()));
               data.addAll(new RowData("Pan", cardData.getPan()));
-
             }
             builder.setView(view);
 
@@ -586,7 +593,6 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
           } else {
             builder.setMessage("Error getting card data. " + response.getReason() + ": " + response.getMessage());
           }
-
           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -607,6 +613,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
      */
     @Override
     public void onCloseoutResponse(CloseoutResponse response) {
+      Log.d(TAG, "onCloseoutResponse: " + response.toString());
       if (response.getSuccess()) {
         showMessage("Closeout successfully scheduled", Toast.LENGTH_LONG);
       } else {
@@ -621,6 +628,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
      */
     @Override
     public void onRetrievePaymentResponse(RetrievePaymentResponse response) {
+      Log.d(TAG,"onRetrievePaymentResponse: " + response.toString());
       if (response.getSuccess()) {
         showPopupMessage(null, new String[]{"Retrieve Payment successful for Payment ID: " + response.getExternalPaymentId(),
             " QueryStatus: " + response.getQueryStatus(),
@@ -633,6 +641,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
     @Override
     public void onRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response) {
+      Log.d(TAG, "onRetrievePendingPaymentsResponse: " + response.toString());
       if (!response.getSuccess()) {
         store.setPendingPayments(null);
       } else {
@@ -1297,6 +1306,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
     CloseoutRequest request = new CloseoutRequest();
     request.setAllowOpenTabs(false);
     request.setBatchId(null);
+    Log.d(TAG, "CloseoutRequest: " + request.toString());
     paymentConnector.closeout(request);
   }
 
@@ -1310,6 +1320,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
       request.setCardEntryMethods(store.getCardEntryMethods());
       request.setDisablePrinting(store.getDisablePrinting());
       request.setDisableReceiptSelection(store.getDisableReceiptOptions());
+      Log.d(TAG, "ManualRefundRequest: " + request.toString());
       paymentConnector.manualRefund(request);
     } catch (NumberFormatException nfe) {
       showMessage("Invalid value. Must be an integer.", Toast.LENGTH_LONG);
@@ -1326,6 +1337,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
     request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
+    Log.d(TAG, "PreAuthRequest: " + request.toString());
     paymentConnector.preAuth(request);
   }
 
@@ -1333,10 +1345,12 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
   public void onReadCardDataClick(View view) {
     ReadCardDataRequest readCardDataRequest = new ReadCardDataRequest();
     readCardDataRequest.setCardEntryMethods(store.getCardEntryMethods());
+    Log.d(TAG, "ReadCardDataRequest: " + readCardDataRequest.toString());
     paymentConnector.readCardData(readCardDataRequest);
   }
 
   public void refreshPendingPayments(View view) {
+    Log.d(TAG, "retrievePendingPayments");
     paymentConnector.retrievePendingPayments();
   }
 

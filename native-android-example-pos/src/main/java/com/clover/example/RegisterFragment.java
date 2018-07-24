@@ -282,7 +282,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     final IPaymentConnector cloverConnector = paymentConnectorWeakReference.get();
-    Log.d("setPaymentStatus: ", request.toString());
+    Log.d(TAG, "PreAuthRequest: " + request.toString());
     cloverConnector.preAuth(request);
   }
 
@@ -381,6 +381,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
     final IPaymentConnector paymentConnector = paymentConnectorWeakReference.get();
+    Log.d(TAG, "SaleRequest: " + request.toString());
     paymentConnector.sale(request);
   }
 
@@ -418,6 +419,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
     final IPaymentConnector cloverConnector = paymentConnectorWeakReference.get();
+    Log.d(TAG, "AuthRequest: " + request.toString());
     cloverConnector.auth(request);
   }
 
@@ -432,6 +434,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     car.setPaymentId(store.getCurrentOrder().getPreAuth().getId());
     car.setAmount(store.getCurrentOrder().getTotal());
     car.setTipAmount(tipAmount);
+    Log.d(TAG, "CapturePreAuthRequest: " + car.toString());
     paymentConnectorWeakReference.get().capturePreAuth(car);
   }
 

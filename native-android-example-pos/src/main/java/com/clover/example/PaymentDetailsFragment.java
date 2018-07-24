@@ -29,6 +29,7 @@ import com.clover.sdk.v3.remotepay.VoidPaymentRequest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class PaymentDetailsFragment extends Fragment implements AdjustTipFragment.AdjustTipFragmentListener, RefundPaymentFragment.PaymentRefundListener{
+  private static final String TAG = PaymentDetailsFragment.class.getSimpleName();
   private View view;
   private TextView title, transactionTitle, date, total, paymentStatus, tender, cardDetails, employee, deviceId, paymentId, entryMethod,
       transactionState, transactionType, absoluteTotal, tip, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
@@ -234,6 +236,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     vpr.setPaymentId(transaction.getId());
     vpr.setOrderId(((POSPayment)transaction).getCloverOrderId());
     vpr.setVoidReason("USER_CANCEL");
+    Log.d(TAG, "VoidPaymentRequest: " + vpr.toString());
     final IPaymentConnector cloverConnector = cloverConnectorWeakReference.get();
     cloverConnector.voidPayment(vpr);
   }
@@ -307,6 +310,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     taar.setOrderId(((POSPayment)transaction).getCloverOrderId());
     taar.setTipAmount(tipAmount);
     final IPaymentConnector paymentConnector = cloverConnectorWeakReference.get();
+    Log.d(TAG, "TipAdjustAuthRequest: " + taar.toString());
     paymentConnector.tipAdjustAuth(taar);
   }
 
@@ -318,6 +322,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refund.setOrderId(((POSPayment)transaction).getCloverOrderId());
     refund.setFullRefund(false);
     final IPaymentConnector cloverConnector = cloverConnectorWeakReference.get();
+    Log.d(TAG, "RefundPaymentRequest - Partial: " + refund.toString());
     cloverConnector.refundPayment(refund);
   }
 
@@ -329,6 +334,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refund.setOrderId(((POSPayment)transaction).getCloverOrderId());
     refund.setFullRefund(true);
     final IPaymentConnector cloverConnector = cloverConnectorWeakReference.get();
+    Log.d(TAG, "RefundPaymentRequest - Full: " + refund.toString());
     cloverConnector.refundPayment(refund);
   }
 }
