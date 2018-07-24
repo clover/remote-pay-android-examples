@@ -140,7 +140,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
     PreAuthDialogFragment.PreAuthDialogFragmentListener, EnterTipFragment.EnterTipDialogFragmentListener, AdjustTipFragment.AdjustTipFragmentListener, EnterCustomerNameFragment.EnterCustomerNameListener,
     EnterPaymentIdFragment.EnterPaymentIdFragmentListener, RefundPaymentFragment.PaymentRefundListener{
 
-  private static final String TAG = "ExamplePOSActivity";
+  private static final String TAG = ExamplePOSActivity.class.getSimpleName();
   public static final String EXAMPLE_POS_SERVER_KEY = "clover_device_endpoint";
   public static final int WS_ENDPOINT_ACTIVITY = 123;
   public static final int SVR_ACTIVITY = 456;
@@ -365,6 +365,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Log.d(TAG, "onActivityResult: requestCode: " + requestCode + " resultCode: " + requestCode + " Intent: " + data);
     if (requestCode == WS_ENDPOINT_ACTIVITY) {
       if (!usb) {
         initialize();
@@ -418,7 +419,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
           @Override
           public void run() {
             Toast.makeText(ExamplePOSActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "disconnected");
+            Log.d(TAG, "onDeviceDisconnected");
             ((TextView) findViewById(R.id.ConnectionStatusLabel)).setText("Disconnected");
           }
         });
@@ -431,12 +432,14 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
           @Override
           public void run() {
             showMessage("Connecting...", Toast.LENGTH_SHORT);
+            Log.d(TAG, "onDeviceConnected");
             ((TextView) findViewById(R.id.ConnectionStatusLabel)).setText("Connecting");
           }
         });
       }
 
       public void onDeviceReady(final MerchantInfo merchantInfo) {
+        Log.d(TAG, "onDeviceReady: MerchantInfo: " + merchantInfo.toString());
         runOnUiThread(new Runnable() {
           public void run() {
             if (pairingCodeDialog != null && pairingCodeDialog.isShowing()) {
@@ -471,7 +474,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onDeviceActivityStart(final CloverDeviceEvent deviceEvent) {
-
+        Log.d(TAG, "onDeviceActivityStart: CloverDeviceEvent: " + deviceEvent);
         lastDeviceEvent = deviceEvent.getEventState();
         runOnUiThread(new Runnable() {
           @Override
@@ -498,6 +501,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onReadCardDataResponse(final ReadCardDataResponse response) {
+        Log.d(TAG, "onReadCardDataResponse: " + response.toString());
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
@@ -587,6 +591,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onDeviceActivityEnd(final CloverDeviceEvent deviceEvent) {
+        Log.d(TAG, "onDeviceActivityEnd: CloverDeviceEvent: " + deviceEvent);
         if (deviceEvent.getEventState() == lastDeviceEvent) {
           runOnUiThread(new Runnable() {
             @Override
@@ -601,11 +606,13 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onDeviceError(CloverDeviceErrorEvent deviceErrorEvent) {
+        Log.d(TAG, "onDeviceError: CloverDeviceErrorEvent: " + deviceErrorEvent);
         showMessage("DeviceError: " + deviceErrorEvent.getMessage(), Toast.LENGTH_LONG);
       }
 
       @Override
       public void onAuthResponse(final AuthResponse response) {
+        Log.d(TAG, "onAuthResponse: " + response.toString());
         if(response != null) {
           if (response.isSuccess()) {
             if(response.getPayment() != null) {
@@ -649,6 +656,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onPreAuthResponse(final PreAuthResponse response) {
+        Log.d(TAG, "onPreAuthResponse: " + response.toString());
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
@@ -682,6 +690,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response) {
+        Log.d(TAG, "onRetrievePendingPaymentsResponse: " + response.toString());
         if (!response.isSuccess()) {
           store.setPendingPayments(null);
         } else {
@@ -691,6 +700,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onTipAdjustAuthResponse(TipAdjustAuthResponse response) {
+        Log.d(TAG, "onTipAdjustAuthResponse: " + response.toString());
         if (response.isSuccess()) {
           boolean updatedTip = false;
           for (POSOrder order : store.getOrders()) {
@@ -718,6 +728,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onCapturePreAuthResponse(final CapturePreAuthResponse response) {
+        Log.d(TAG, "onCapturePreAuthResponse: " + response);
         if (response.isSuccess()) {
           for(final POSOrder order: store.getOrders()) {
             final POSPayment payment = order.getPreAuth();
@@ -759,6 +770,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onVerifySignatureRequest(final VerifySignatureRequest request) {
+        Log.d(TAG, "onVerifySignatureRequest: " + request.toString());
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
@@ -771,6 +783,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onMessageFromActivity(MessageFromActivity message) {
+        Log.d(TAG, "onMessageFromActivity: " + message.toString());
         FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag("CUSTOM");
         ((CustomActivitiesFragment)fragment).addMessage(message);
@@ -778,6 +791,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onConfirmPaymentRequest(ConfirmPaymentRequest request) {
+        Log.d(TAG, "onConfirmPaymentRequest: " + request.toString());
         if (request.getPayment() == null || request.getChallenges() == null) {
           showMessage("Error: The ConfirmPaymentRequest was missing the payment and/or challenges.", Toast.LENGTH_LONG);
         } else {
@@ -794,6 +808,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onCloseoutResponse(CloseoutResponse response) {
+        Log.d(TAG, "onCloseoutResponse: " + response.toString());
         if (response.isSuccess()) {
           showMessage("Closeout is scheduled.", Toast.LENGTH_SHORT);
         } else {
@@ -803,6 +818,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onSaleResponse(final SaleResponse response) {
+        Log.d(TAG, "onSaleResponse: " + response.toString());
         if (response != null) {
           if (response.isSuccess()) { // Handle cancel response
             if (response.getPayment() != null) {
@@ -849,6 +865,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onManualRefundResponse(final ManualRefundResponse response) {
+        Log.d(TAG, "onManualRefundResponse: " + response.toString());
         if (response.isSuccess()) {
           Credit credit = response.getCredit();
           CardTransaction cardTransaction = credit.getCardTransaction();
@@ -874,6 +891,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onRefundPaymentResponse(final RefundPaymentResponse response) {
+        Log.d(TAG, "onRefundPaymentResponse: " + response.toString());
         if (response.isSuccess()) {
           POSRefund refund = new POSRefund(response.getRefund().getId(), response.getRefund().getPayment().getId(), response.getOrderId(), "DEFAULT", response.getRefund().getAmount());
           refund.setDate(new Date(response.getRefund().getCreatedTime()));
@@ -918,6 +936,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onTipAdded(TipAddedMessage message) {
+        Log.d(TAG, "onTipAdded: " + message.toString());
         if (message.tipAmount > 0) {
           showMessage("Tip successfully added: " + CurrencyUtils.format(message.tipAmount, Locale.getDefault()), Toast.LENGTH_SHORT);
         }
@@ -925,6 +944,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onVoidPaymentResponse(VoidPaymentResponse response) {
+        Log.d(TAG, "onVoidPaymentResponse: " + response.toString());
         if (response.isSuccess()) {
           boolean done = false;
           for (POSOrder order : store.getOrders()) {
@@ -955,6 +975,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
        */
       @Override
       public void onVoidPaymentRefundResponse(final VoidPaymentRefundResponse response) {
+        Log.d(TAG, "onVoidPaymentRefundResponse: " + response.toString());
         if (response.isSuccess()) {
           boolean done = false;
 
@@ -989,6 +1010,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onVaultCardResponse(final VaultCardResponse response) {
+        Log.d(TAG, "onVaultCardResponse" + response.toString());
         if (response.isSuccess()) {
           POSCard card = new POSCard();
           card.setFirst6(response.getCard().getFirst6());
@@ -1014,46 +1036,55 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onPrintJobStatusResponse(PrintJobStatusResponse response) {
+        Log.d(TAG, "onPrintJobStatusResponse: " + response.toString());
         showMessage("PrintJobStatus: " + response.getStatus(), Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onRetrievePrintersResponse(RetrievePrintersResponse response) {
+        Log.d(TAG, "onRetrievePrintersResponse: " + response.toString());
         printers = response.getPrinters();
       }
 
       @Override
       public void onPrintManualRefundReceipt(PrintManualRefundReceiptMessage pcm) {
+        Log.d(TAG, "onPrintManualRefundReceipt: " + pcm.toString());
         showMessage("Print Request for ManualRefund", Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage pcdrm) {
+        Log.d(TAG, "onPrintManualRefundDeclineReceipt: " + pcdrm.toString());
         showMessage("Print Request for Declined ManualRefund", Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onPrintPaymentReceipt(PrintPaymentReceiptMessage pprm) {
+        Log.d(TAG, "onPrintPaymentReceipt: " + pprm.toString());
         showMessage("Print Request for Payment Receipt", Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage ppdrm) {
+        Log.d(TAG, "onPrintPaymentDeclineReceipt: " + ppdrm.toString());
         showMessage("Print Request for DeclinedPayment Receipt", Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage ppmcrm) {
+        Log.d(TAG, "onPrintPaymentMerchantCopyReceipt: " + ppmcrm.toString());
         showMessage("Print Request for MerchantCopy of a Payment Receipt", Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage pprrm) {
+        Log.d(TAG, "onPrintRefundPaymentReceipt: " + pprrm.toString());
         showMessage("Print Request for RefundPayment Receipt", Toast.LENGTH_SHORT);
       }
 
       @Override
       public void onCustomActivityResponse(CustomActivityResponse response) {
+        Log.d(TAG, "onCustomActivityResponse: " + response.toString());
         String message = "";
         if (response.isSuccess()) {
           message = "Success! Got: " + response.getPayload() + " from CustomActivity" + response.getAction();
@@ -1075,19 +1106,20 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response) {
+        Log.d(TAG, "onRetrieveDeviceStatusResponse: " + response.toString());
         showPopupMessage("Device Status", new String[]{response.isSuccess() ? "Success!" : "Failed!",
             "State: " + response.getState(), "ExternalActivityId: " + response.getData().toString(), "Reason: " + response.getReason() }, false);
       }
 
       @Override
       public void onResetDeviceResponse(ResetDeviceResponse response) {
-//        showMessage((response.isSuccess() ? "Success!" : "Failed!") + " State: " + response.getState()
-//                    + " reason: " + response.getReason(), Toast.LENGTH_LONG);
+        Log.d(TAG, "onResetDeviceResponse: " + response.toString());
         showPopupMessage("Reset Device", new String[]{response.isSuccess() ? "Success!" : "Failed!", "State: " + response.getState(), "Reason: " + response.getReason()}, false);
       }
 
       @Override
       public void onRetrievePaymentResponse(RetrievePaymentResponse response) {
+        Log.d(TAG, "onRetrievePaymentResponse: " + response.toString());
         if (response.isSuccess()) {
           showPopupMessage("Retrieve Payment", new String[]{"Retrieve Payment successful for Payment ID: " + response.getExternalPaymentId(),
               " QueryStatus: " + response.getQueryStatus(),
@@ -1128,7 +1160,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
   }
 
-  private void showPaymentConfirmation(PaymentConfirmationListener listenerIn, Challenge challengeIn, int challengeIndexIn) {
+  private void showPaymentConfirmation(PaymentConfirmationListener listenerIn, final Challenge challengeIn, int challengeIndexIn) {
     final int challengeIndex = challengeIndexIn;
     final Challenge challenge = challengeIn;
     final PaymentConfirmationListener listener = listenerIn;
@@ -1140,6 +1172,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        Log.d(TAG, "Rejecting Challenge: " + challengeIn.toString());
         listener.onRejectClicked(challenge);
         dialog.dismiss();
       }
@@ -1148,6 +1181,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        Log.d(TAG, "Accepting Challenge: " + challengeIn.toString());
         listener.onAcceptClicked(challengeIndex);
         dialog.dismiss();
       }
@@ -1543,6 +1577,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       request.setCardEntryMethods(store.getCardEntryMethods());
       request.setDisablePrinting(store.getDisablePrinting());
       request.setDisableReceiptSelection(store.getDisableReceiptOptions());
+      Log.d(TAG, "ManualRefundRequest: " + request.toString());
       cloverConnector.manualRefund(request);
     } catch (NumberFormatException nfe) {
       showMessage("Invalid value. Must be an integer.", Toast.LENGTH_LONG);
@@ -1557,6 +1592,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       lastPrintRequestId = String.valueOf(getNextPrintRequestId());
       pr.setPrintRequestId(lastPrintRequestId);
       pr = new PrintRequest(lines, lastPrintRequestId, printer.getId());
+      Log.d(TAG, "PrintRequest - Print Text: " + pr.toString());
       cloverConnector.print(pr);
       printer = null;
     }
@@ -1569,6 +1605,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       lastPrintRequestId = String.valueOf(getNextPrintRequestId());
       pr.setPrintRequestId(lastPrintRequestId);
       pr = new PrintRequest(URL, lastPrintRequestId, printer.getId());
+      Log.d(TAG, "PrintRequest - Print Image URL: " + pr.toString());
       cloverConnector.print(pr);
       printer = null;
     }
@@ -1576,6 +1613,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
 
   public void queryPrintStatusClick(View view){
     PrintJobStatusRequest pjsr = new PrintJobStatusRequest(lastPrintRequestId);
+    Log.d(TAG, "PrintJobStatusRequest: " + pjsr.toString());
     cloverConnector.retrievePrintJobStatus(pjsr);
   }
 
@@ -1619,6 +1657,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
     if(printer != null) {
       ocdr.setDeviceId(printer.getId());
     }
+    Log.d(TAG, "OpenCashDrawerRequest: " + ocdr.toString());
     cloverConnector.openCashDrawer(ocdr);
   }
 
@@ -1633,6 +1672,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
     request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
+    Log.d(TAG, "PreAuthRequest: " + request.toString());
     cloverConnector.preAuth(request);
   }
 
@@ -1640,6 +1680,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
     CloseoutRequest request = new CloseoutRequest();
     request.setAllowOpenTabs(false);
     request.setBatchId(null);
+    Log.d(TAG, "CloseoutRequest: " + request.toString());
     cloverConnector.closeout(request);
   }
 
@@ -1660,6 +1701,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       lastPrintRequestId = String.valueOf(getNextPrintRequestId());
       pr.setPrintRequestId(lastPrintRequestId);
       pr = new PrintRequest(bitmap, lastPrintRequestId, printer.getId());
+      Log.d(TAG, "PrintRequest - Print Image: " + pr.toString());
       cloverConnector.print(pr);
       printer = null;
     }
@@ -1675,6 +1717,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
+                Log.d(TAG, "Resetting Device");
                 cloverConnector.resetDevice();
               }
             })
@@ -1685,18 +1728,25 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
   }
 
   public void onReadCardDataClick(View view) {
-    cloverConnector.readCardData(new ReadCardDataRequest(store.getCardEntryMethods()));
+    ReadCardDataRequest readCardDataRequest = new ReadCardDataRequest(store.getCardEntryMethods());
+    Log.d(TAG, "ReadCardDataRequest: " + readCardDataRequest);
+    cloverConnector.readCardData(readCardDataRequest);
   }
 
   public void onGetDeviceStatusClick(View view) {
-    cloverConnector.retrieveDeviceStatus(new RetrieveDeviceStatusRequest(false));
+    RetrieveDeviceStatusRequest request = new RetrieveDeviceStatusRequest(false);
+    Log.d(TAG, "RetrieveDeviceStatusRequest: " + request.toString());
+    cloverConnector.retrieveDeviceStatus(request);
   }
 
   public void onGetDeviceStatusCBClick(View view) {
+    RetrieveDeviceStatusRequest request = new RetrieveDeviceStatusRequest(true);
+    Log.d(TAG, "RetrieveDeviceStatusRequest: " + request.toString());
     cloverConnector.retrieveDeviceStatus(new RetrieveDeviceStatusRequest(true));
   }
 
   public void refreshPendingPayments(View view) {
+    Log.d(TAG, "Retrieving Pending Payments");
     cloverConnector.retrievePendingPayments();
   }
 

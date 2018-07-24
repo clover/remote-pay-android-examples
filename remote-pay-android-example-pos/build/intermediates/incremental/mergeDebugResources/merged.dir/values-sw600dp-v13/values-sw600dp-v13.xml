@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="return_to_merchant_all_caps">true</bool>
+    <bool name="return_to_merchant_single_line">true</bool>
+    <color name="background_return_to_merchant">#263338</color>
+    <color name="return_to_merchant_text">@android:color/white</color>
+    <dimen name="return_to_merchant_icon_margin_left">30dp</dimen>
+    <dimen name="return_to_merchant_instr_text_size">18sp</dimen>
+    <dimen name="return_to_merchant_title_margin_bottom">20dp</dimen>
+    <dimen name="return_to_merchant_title_margin_top">50dp</dimen>
+    <dimen name="return_to_merchant_title_text_size">72sp</dimen>
+    <string name="returnToMerchant">Please return this device to an employee</string>
+    <string name="returnToMerchantFontFamily">sans-serif</string>
+    <string name="returnToMerchantPaymentSuccessful">Thank you for your purchase. Please return this device to an employee</string>
+</resources>

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.clover.remote.client.messages.VerifySignatureRequest;
 public class SignatureFragment extends DialogFragment {
 
 
+  private static final String TAG = SignatureFragment.class.getSimpleName();
   private Signature2 signature;
   Button rejectButton;
   Button acceptButton;
@@ -88,6 +90,7 @@ public class SignatureFragment extends DialogFragment {
         @Override
         public void onClick(View v) {
           dismiss();
+          Log.d(TAG, "Accepting Signature: " + verifySignatureRequest.toString());
           cloverConnector.acceptSignature(verifySignatureRequest);
         }
       });
@@ -95,6 +98,7 @@ public class SignatureFragment extends DialogFragment {
         @Override
         public void onClick(View v) {
           dismiss();
+          Log.d(TAG, "Rejecting Signature: " + verifySignatureRequest.toString());
           cloverConnector.rejectSignature(verifySignatureRequest);
         }
       });

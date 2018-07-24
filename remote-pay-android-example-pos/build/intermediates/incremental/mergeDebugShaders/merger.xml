@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/rachel.antion/src/apps/remote-pay-android-examples/remote-pay-android-example-pos/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/rachel.antion/src/apps/remote-pay-android-examples/remote-pay-android-example-pos/src/debug/shaders"/></dataSet></merger>
