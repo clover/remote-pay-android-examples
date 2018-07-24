@@ -53,7 +53,6 @@ public class CustomActivitiesFragment extends Fragment {
                            Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_custom_activities, container, false);
 
-
     customActivityId = ((Spinner) view.findViewById(R.id.activity_id));
     // Get a reference to the AutoCompleteTextView in the layout and assign the auto-complete choices.
     String[] samples = getResources().getStringArray(R.array.customIds);

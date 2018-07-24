@@ -22,6 +22,7 @@
 .gradle/vcsWorkingDirs/gc.properties
 .idea/externalDependencies.xml
 .idea/inspectionProfiles/profiles_settings.xml
+.idea/*
 native-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_custom_activities.xml
 native-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_customers.xml
 native-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_device.xml
@@ -1532,3 +1533,5 @@ remote-pay-android-example-pos/build/intermediates/transforms/mergeJavaRes/debug
 remote-pay-android-example-pos/build/intermediates/transforms/mergeJniLibs/debug/__content__.json
 remote-pay-android-example-pos/build/outputs/apk/debug/output.json
 remote-pay-android-example-pos/build/outputs/apk/debug/remote-pay-android-example-pos-debug.apk
+remote-pay-android-example-pos/build/*
+

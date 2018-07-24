@@ -220,7 +220,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
-    Log.d("setPaymentStatus: ", request.toString());
+    Log.d(TAG, "PreAuthRequest: " + request.toString());
     getCloverConnector().preAuth(request);
   }
 
@@ -315,7 +315,6 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   @Override
   public void onSaleClicked() {
     String externalPaymentID = IdUtils.getNextId();
-    Log.d(TAG, "Sale ExternalPaymentID:" + externalPaymentID);
     store.getCurrentOrder().setPendingPaymentId(externalPaymentID);
     SaleRequest request = new SaleRequest(store.getCurrentOrder().getTotal(), externalPaymentID);
     request.setCardEntryMethods(store.getCardEntryMethods());
@@ -333,6 +332,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    Log.d(TAG, "SaleRequest: " + request.toString());
     getCloverConnector().sale(request);
   }
 
@@ -348,7 +348,6 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   @Override
   public void onAuthClicked() {
     String externalPaymentID = IdUtils.getNextId();
-    Log.d(TAG, "Auth ExternalPaymentID:" + externalPaymentID);
     store.getCurrentOrder().setPendingPaymentId(externalPaymentID);
     AuthRequest request = new AuthRequest(store.getCurrentOrder().getTotal(), externalPaymentID);
     request.setCardEntryMethods(store.getCardEntryMethods());
@@ -364,6 +363,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    Log.d(TAG, "AuthRequest: " + request.toString());
     getCloverConnector().auth(request);
   }
 
@@ -384,6 +384,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     car.setDisableReceiptSelection(store.getDisableReceiptOptions());
     car.setTipAmount(store.getTipAmount());
     car.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    Log.d(TAG, "CapturePreAuthRequest: " + car.toString());
     getCloverConnector().capturePreAuth(car);
   }
 

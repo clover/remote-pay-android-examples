@@ -22,6 +22,7 @@ import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,6 +194,7 @@ public class CardsFragment extends Fragment implements EnterCustomerNameFragment
     @Override
     public void onContinue(String name) {
         this.customerName = name;
+        Log.d(TAG, "Vaulting Card: Entry Methods: "+store.getCardEntryMethods());
         getCloverConnector().vaultCard(store.getCardEntryMethods());
     }
 

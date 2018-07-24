@@ -11,6 +11,7 @@ import com.clover.sdk.JSONifiable;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomActivitiesFragment extends Fragment {
-
+  private static final String TAG = CustomActivitiesFragment.class.getSimpleName();
   private WeakReference<ICloverConnector> cloverConnectorWeakReference;
   private TextView otherCustom, cloverCustom;
   private View view;
@@ -149,6 +150,7 @@ public class CustomActivitiesFragment extends Fragment {
     initialPayloadContent.setText("");
     finalPayload.setText("");
 
+    Log.d(TAG, "CustomActivityRequest: " + car.toString());
     getCloverConnector().startCustomActivity(car);
   }
 

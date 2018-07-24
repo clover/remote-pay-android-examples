@@ -56,7 +56,7 @@ import java.util.Locale;
 
 
 public class CurrentOrderFragment extends Fragment implements OrderObserver, ChooseSaleTypeFragment.ChooseSaleTypeListener, EnterTipFragment.EnterTipDialogFragmentListener{
-
+  private static final String TAG = CurrentOrderFragment.class.getSimpleName();
   private POSStore store;
   private View v;
   private boolean preAuth = false;
@@ -66,7 +66,6 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
   private WeakReference<ICloverConnector> cloverConnectorWeakReference;
   List<CurrentOrderFragmentListener> listeners = new ArrayList<CurrentOrderFragmentListener>(5);
   private OnFragmentInteractionListener mListener;
-  private String TAG = CurrentOrderFragment.class.getSimpleName();
 
   public static CurrentOrderFragment newInstance(boolean preAuth) {
     CurrentOrderFragment fragment = new CurrentOrderFragment();
@@ -312,6 +311,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
     request.setVaultedCard(vaulted);
+    Log.d(TAG, "Vaulted Sale Request: "+ request);
     cloverConnectorWeakReference.get().sale(request);
   }
 

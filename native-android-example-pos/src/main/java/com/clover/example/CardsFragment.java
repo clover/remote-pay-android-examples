@@ -30,6 +30,7 @@ import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class CardsFragment extends Fragment implements EnterCustomerNameFragment.EnterCustomerNameListener {
+    private static final String TAG = CardsFragment.class.getSimpleName();
     private String customerName = "";
     private Button vaultNewCard;
 
@@ -181,6 +183,7 @@ public class CardsFragment extends Fragment implements EnterCustomerNameFragment
     @Override
     public void onContinue(String name) {
         this.customerName = name;
+        Log.d(TAG, "Vaulting Card: Entry Methods: "+store.getCardEntryMethods());
         paymentConnectorWeakReference.get().vaultCard(store.getCardEntryMethods());
     }
 

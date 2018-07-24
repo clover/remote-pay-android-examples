@@ -31,6 +31,7 @@ import com.clover.remote.client.messages.VoidPaymentRequest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class PaymentDetailsFragment extends Fragment implements AdjustTipFragment.AdjustTipFragmentListener, RefundPaymentFragment.PaymentRefundListener{
+  private static final String TAG = PaymentDetailsFragment.class.getSimpleName();
   private View view;
   private TextView title, transactionTitle, date, total, paymentStatus, refundStatus, tender, cardDetails, employee, deviceId, paymentId, entryMethod, transactionType,
       transactionState, absoluteTotal, tip, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
@@ -242,6 +244,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     vpr.setVoidReason("USER_CANCEL");
     vpr.setDisableReceiptSelection(store.getDisableReceiptOptions() != null ? store.getDisableReceiptOptions() : false);
     vpr.setDisablePrinting(store.getDisablePrinting() != null ? store.getDisablePrinting() : false);
+    Log.d(TAG, "VoidPaymentRequest: " + vpr.toString());
     getCloverConnector().voidPayment(vpr);
   }
 
@@ -281,6 +284,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     vprr.setOrderId(((POSPayment)transaction).getCloverOrderId());
     vprr.setDisableReceiptSelection(store.getDisableReceiptOptions() != null ? store.getDisableReceiptOptions() : false);
     vprr.setDisablePrinting(store.getDisablePrinting() != null ? store.getDisablePrinting() : false);
+    Log.d(TAG, "VoidPaymentRefundRequest: " + vprr.toString());
     getCloverConnector().voidPaymentRefund(vprr);
   }
 
@@ -336,6 +340,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refund.setDisablePrinting(store.getDisablePrinting() != null ? store.getDisablePrinting() : false);
     refund.setDisableReceiptSelection(store.getDisableReceiptOptions() != null ? store.getDisableReceiptOptions() : false);
     final ICloverConnector cloverConnector = cloverConnectorWeakReference.get();
+    Log.d(TAG, "RefundPaymentRequest - Partial: " + refund.toString());
     cloverConnector.refundPayment(refund);
   }
 
@@ -347,6 +352,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refund.setOrderId(((POSPayment)transaction).getCloverOrderId());
     refund.setFullRefund(true);
     final ICloverConnector cloverConnector = cloverConnectorWeakReference.get();
+    Log.d(TAG, "RefundPaymentRequest - Full: " + refund.toString());
     cloverConnector.refundPayment(refund);
   }
 
@@ -356,6 +362,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     taar.setPaymentId(transaction.getId());
     taar.setOrderId(((POSPayment)transaction).getCloverOrderId());
     taar.setTipAmount(tipAmount);
+    Log.d(TAG, "TipAdjustAuthRequest: " + taar.toString());
     getCloverConnector().tipAdjustAuth(taar);
   }
 }

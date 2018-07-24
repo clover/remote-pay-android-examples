@@ -39,6 +39,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ import java.util.Locale;
 
 
 public class CurrentOrderFragment extends Fragment implements OrderObserver, ChooseSaleTypeFragment.ChooseSaleTypeListener, EnterTipFragment.EnterTipDialogFragmentListener{
-
+  private static final String TAG = CurrentOrderFragment.class.getSimpleName();
   private POSStore store;
   private View v;
   private POSCard vaultedCard;
@@ -189,6 +190,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
     request.setVaultedCard(vaulted);
+    Log.d(TAG, "Vaulted Sale Request: "+ request);
     cloverConnectorWeakReference.get().sale(request);
   }
 

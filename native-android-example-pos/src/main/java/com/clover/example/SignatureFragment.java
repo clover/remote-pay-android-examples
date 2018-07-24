@@ -24,6 +24,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import android.widget.Button;
 
 
 public class SignatureFragment extends Fragment {
+  private static final String TAG = SignatureFragment.class.getSimpleName();
 
   private Signature signature;
   Button rejectButton;
@@ -79,6 +81,7 @@ public class SignatureFragment extends Fragment {
           FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
           fragmentTransaction.hide(SignatureFragment.this);
           fragmentTransaction.commit();
+          Log.d(TAG, "Accepting Signature: " + verifySignatureRequest.toString());
           paymentConnector.acceptSignature(verifySignatureRequest);
         }
       });
@@ -88,6 +91,7 @@ public class SignatureFragment extends Fragment {
           FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
           fragmentTransaction.hide(SignatureFragment.this);
           fragmentTransaction.commit();
+          Log.d(TAG, "Rejecting Signature: " + verifySignatureRequest.toString());
           paymentConnector.rejectSignature(verifySignatureRequest);
         }
       });
