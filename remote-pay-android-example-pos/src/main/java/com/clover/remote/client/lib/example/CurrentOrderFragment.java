@@ -59,7 +59,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
   private static final String TAG = CurrentOrderFragment.class.getSimpleName();
   private POSStore store;
   private View v;
-  private TextView tip;
+  private TextView tip, tipTitle;
   private boolean preAuth = false;
   private boolean vaulted = false;
   private POSCard vaultedCard;
@@ -164,6 +164,9 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
       vaultedCardNum.setText(getString(R.string.vault_card_num, vaultedCard.getFirst6(), vaultedCard.getLast4()));
     }
     tip = (TextView) v.findViewById(R.id.TipLabel);
+    tipTitle = (TextView) v.findViewById(R.id.TipLabelTitle);
+    tip.setVisibility(View.GONE);
+    tipTitle.setVisibility(View.GONE);
 
     return v;
   }
@@ -228,6 +231,8 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     getActivity().runOnUiThread(new Runnable() {
       @Override
       public void run() {
+        tip.setVisibility(View.VISIBLE);
+        tipTitle.setVisibility(View.VISIBLE);
         tip.setText(CurrencyUtils.convertToString(tipAmount));
         String totalFormatted = CurrencyUtils.format(order.getTotal() + tipAmount, Locale.getDefault());
         ((TextView) getView().findViewById(R.id.TotalLabel)).setText(totalFormatted);
@@ -363,6 +368,8 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     this.order = order;
     this.order.addOrderObserver(this);
     tip.setText("$0.00");
+    tip.setVisibility(View.GONE);
+    tipTitle.setVisibility(View.GONE);
     updateCurrentOrder();
     updateTotals();
   }
