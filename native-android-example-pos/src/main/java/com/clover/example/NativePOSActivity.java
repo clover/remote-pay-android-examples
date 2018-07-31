@@ -91,6 +91,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class NativePOSActivity extends Activity implements CurrentOrderFragment.OnFragmentInteractionListener,
     AvailableItem.OnFragmentInteractionListener, OrdersFragment.OnFragmentInteractionListener,
@@ -455,7 +456,10 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
      */
     @Override
     public void onTipAdded(TipAdded tipAdded) {
-
+      Log.d(TAG, "onTipAdded: " + tipAdded.toString());
+      if (tipAdded.getTipAmount() > 0) {
+        showMessage("Tip successfully added: " + CurrencyUtils.format(tipAdded.getTipAmount(), Locale.getDefault()), Toast.LENGTH_SHORT);
+      }
     }
 
     @Override

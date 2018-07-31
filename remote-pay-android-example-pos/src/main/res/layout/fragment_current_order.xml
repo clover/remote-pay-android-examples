@@ -161,11 +161,18 @@
         android:id="@+id/TaxLabel"
         android:layout_gravity="right"/>
     <TextView
+        android:text="@string/tip"/>
+    <TextView
+        android:id="@+id/TipLabel"
+        android:text="$0.00"
+        android:layout_gravity="right"/>
+    <TextView
         android:text="@string/total"
         android:textSize="24sp"/>
     <TextView
         android:id="@+id/TotalLabel"
-        android:layout_gravity="right"/>
+        android:layout_gravity="right"
+        android:textSize="24sp"/>
   </GridLayout>
   <LinearLayout
       android:layout_width="fill_parent"

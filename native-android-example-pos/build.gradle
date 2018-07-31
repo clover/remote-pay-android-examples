@@ -31,8 +31,8 @@ android {
 
 dependencies {
   // Use local project dependency in dev
-  compile 'com.clover.sdk:clover-android-connector-sdk:207-SNAPSHOT'
-  compile 'com.clover:clover-remote-interface:235-SNAPSHOT'
+  compile 'com.clover.sdk:clover-android-connector-sdk:209-SNAPSHOT'
+  compile 'com.clover:clover-remote-interface:237-SNAPSHOT'
   // Use published artifact when releasing
   //compile 'com.clover.sdk:clover-android-connector-sdk:1.4.1'
   compile 'org.java-websocket:Java-WebSocket:1.3.0'
