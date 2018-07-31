@@ -58,6 +58,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
   private static final String TAG = CurrentOrderFragment.class.getSimpleName();
   private POSStore store;
   private View v;
+  private TextView tip;
   private POSCard vaultedCard;
   private boolean preAuth = false;
   private boolean vaulted = false;

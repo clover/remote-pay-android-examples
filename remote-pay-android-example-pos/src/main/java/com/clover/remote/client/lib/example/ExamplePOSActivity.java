@@ -938,6 +938,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       public void onTipAdded(TipAddedMessage message) {
         Log.d(TAG, "onTipAdded: " + message.toString());
         if (message.tipAmount > 0) {
+          tipAdded(message.tipAmount);
           showMessage("Tip successfully added: " + CurrencyUtils.format(message.tipAmount, Locale.getDefault()), Toast.LENGTH_SHORT);
         }
       }
@@ -1615,6 +1616,12 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
     PrintJobStatusRequest pjsr = new PrintJobStatusRequest(lastPrintRequestId);
     Log.d(TAG, "PrintJobStatusRequest: " + pjsr.toString());
     cloverConnector.retrievePrintJobStatus(pjsr);
+  }
+
+  private void tipAdded(long tipAmount){
+    FragmentManager fragmentManager = getFragmentManager();
+    Fragment fragment = fragmentManager.findFragmentById(R.id.PendingOrder);
+    ((CurrentOrderFragment)fragment).tipAdded(tipAmount);
   }
 
   private void updatePaymentDetailsTip(POSTransaction payment){

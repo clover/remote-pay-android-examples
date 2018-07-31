@@ -23,6 +23,7 @@
 .idea/externalDependencies.xml
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/*
+.gradle/*
 native-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_custom_activities.xml
 native-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_customers.xml
 native-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_device.xml
@@ -619,6 +620,7 @@ native-android-example-pos/build/intermediates/transforms/mergeJniLibs/debug/__c
 native-android-example-pos/build/outputs/apk/debug/native-android-example-pos-debug.apk
 native-android-example-pos/build/outputs/apk/debug/output.json
 native-android-example-pos/build/outputs/logs/manifest-merger-debug-report.txt
+native-android-example-pos/build/*
 remote-pay-android-example-pos/.settings/gradle/org.springsource.ide.eclipse.gradle.core.prefs
 remote-pay-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_custom_activities.xml
 remote-pay-android-example-pos/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_customers.xml
@@ -1534,4 +1536,10 @@ remote-pay-android-example-pos/build/intermediates/transforms/mergeJniLibs/debug
 remote-pay-android-example-pos/build/outputs/apk/debug/output.json
 remote-pay-android-example-pos/build/outputs/apk/debug/remote-pay-android-example-pos-debug.apk
 remote-pay-android-example-pos/build/*
+remote-pay-android-example-pos/remote-pay-android-example-pos.iml
+remote-pay-android-examples.iml
+remote-pay-android-simple-example/remote-pay-android-simple-example.iml
+native-android-example-pos/native-android-example-pos.iml
+local.properties
+
 

@@ -161,6 +161,11 @@
         android:id="@+id/TaxLabel"
         android:layout_gravity="right"/>
     <TextView
+        android:text="@string/tip"/>
+    <TextView
+        android:id="@+id/TipLabel"
+        android:layout_gravity="right"/>
+    <TextView
         android:text="@string/total"
         android:textSize="24sp"/>
     <TextView
