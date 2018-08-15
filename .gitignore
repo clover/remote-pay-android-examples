@@ -1541,5 +1541,5 @@ remote-pay-android-examples.iml
 remote-pay-android-simple-example/remote-pay-android-simple-example.iml
 native-android-example-pos/native-android-example-pos.iml
 local.properties
-
-
+.idea
+build
