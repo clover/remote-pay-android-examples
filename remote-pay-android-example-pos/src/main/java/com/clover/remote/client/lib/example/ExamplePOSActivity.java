@@ -47,6 +47,7 @@ import com.clover.remote.client.messages.CloverDeviceEvent;
 import com.clover.remote.client.messages.ConfirmPaymentRequest;
 import com.clover.remote.client.messages.CustomActivityRequest;
 import com.clover.remote.client.messages.CustomActivityResponse;
+import com.clover.remote.client.messages.DisplayReceiptOptionsResponse;
 import com.clover.remote.client.messages.ManualRefundRequest;
 import com.clover.remote.client.messages.ManualRefundResponse;
 import com.clover.remote.client.messages.MessageFromActivity;
@@ -1129,6 +1130,12 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
         } else {
           showPopupMessage(null, new String[]{"Retrieve Payment error: " + response.getResult()}, false);
         }
+      }
+
+      @Override
+      public void onDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response) {
+        Log.d(TAG, "onDisplayReceiptOptionsResponse: " + response.toString());
+        showMessage("Display Receipt Options", Toast.LENGTH_SHORT);
       }
 
     };
