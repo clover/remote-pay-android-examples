@@ -60,7 +60,7 @@ public class POSStore {
   private Boolean allowOfflinePayment;
   private Boolean forceOfflinePayment;
   private Boolean disablePrinting;
-  private Long tipAmount;
+  private Long tipAmount = 0L;
   private TipMode tipMode;
   private Long signatureThreshold;
   private DataEntryLocation signatureEntryLocation;
