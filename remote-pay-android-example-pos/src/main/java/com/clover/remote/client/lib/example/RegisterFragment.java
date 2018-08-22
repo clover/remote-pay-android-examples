@@ -216,8 +216,6 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     PreAuthRequest request = new PreAuthRequest(preauthAmount, externalId);
     request.setCardEntryMethods(store.getCardEntryMethods());
     request.setDisablePrinting(store.getDisablePrinting());
-    request.setSignatureEntryLocation(store.getSignatureEntryLocation());
-    request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     Log.d(TAG, "PreAuthRequest: " + request.toString());
