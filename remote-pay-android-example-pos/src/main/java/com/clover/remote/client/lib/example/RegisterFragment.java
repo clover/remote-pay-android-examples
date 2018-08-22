@@ -377,13 +377,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     CapturePreAuthRequest car = new CapturePreAuthRequest();
     car.setPaymentID(store.getCurrentOrder().getPreAuth().getId());
     car.setAmount(store.getCurrentOrder().getTotal());
-    car.setDisablePrinting(store.getDisablePrinting());
-    car.setTipMode(store.getTipMode());
-    car.setSignatureEntryLocation(store.getSignatureEntryLocation());
-    car.setSignatureThreshold(store.getSignatureThreshold());
-    car.setDisableReceiptSelection(store.getDisableReceiptOptions());
     car.setTipAmount(store.getTipAmount());
-    car.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
     Log.d(TAG, "CapturePreAuthRequest: " + car.toString());
     getCloverConnector().capturePreAuth(car);
   }

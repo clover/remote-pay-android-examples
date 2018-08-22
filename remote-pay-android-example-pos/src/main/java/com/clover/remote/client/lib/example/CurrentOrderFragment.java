@@ -130,12 +130,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
       public void onClick(View v) {
         if (store.getCurrentOrder().getItems().size() > 0) {
           if(preAuth){
-            showTransactionSettings(new Runnable() {
-              @Override
-              public void run() {
-                payWithPreAuth();
-              }
-            }, TransactionSettingsFragment.transactionTypes.PREAUTH );
+           showEnterTipDialog();
           }
           else if(vaulted){
             showTransactionSettings(new Runnable() {
@@ -351,6 +346,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
 
   @Override
   public void onContinue(long amount) {
+    store.setTipAmount(amount);
     payWithPreAuth();
   }
 
