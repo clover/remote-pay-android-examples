@@ -105,6 +105,7 @@
   <string name="no_discount">No Discount</string>
   <string name="non_blocking">Non-Blocking</string>
   <string name="offline_payments">Offline Payments</string>
+  <string name="receipts">Receipts</string>
   <string name="ok">Ok</string>
   <string name="one">1</string>
   <string name="open_cash_drawer">Open Cash Drawer</string>
@@ -223,7 +224,6 @@
   <string name="device_options">Device Options</string>
 
 
-
   <string-array name="pref_protocol_list_titles">
     <item>WS</item>
     <item>WSS</item>
@@ -234,5 +234,8 @@
   </string-array>
 
   <item type="id" name="button_exit"/>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
