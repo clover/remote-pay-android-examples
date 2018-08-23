@@ -23,6 +23,7 @@ import com.clover.remote.client.lib.example.model.POSRefund;
 import com.clover.remote.client.lib.example.model.POSStore;
 import com.clover.remote.client.lib.example.model.POSTransaction;
 import com.clover.remote.client.lib.example.utils.CurrencyUtils;
+import com.clover.remote.client.messages.DisplayReceiptOptionsRequest;
 import com.clover.remote.client.messages.RefundPaymentRequest;
 import com.clover.remote.client.messages.TipAdjustAuthRequest;
 import com.clover.remote.client.messages.VoidPaymentRefundRequest;
@@ -51,7 +52,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
       transactionState, absoluteTotal, tip, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
   private LinearLayout tipRow, refundRow, paymentSuccessfulRow;
   private ImageView paymentStatusImage, refundStatusImage;
-  private Button refund, voidPayment, addTip;
+  private Button refund, voidPayment, addTip, receiptSale, receiptRefund;
   private POSTransaction transaction;
   private POSStore store;
   private WeakReference<ICloverConnector> cloverConnectorWeakReference;
@@ -110,7 +111,6 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refundDevice = (TextView) view.findViewById(R.id.PaymentDetailsRefundDeviceId);
     refundId = (TextView) view.findViewById(R.id.PaymentDetailsRefundId);
     refundDate = (TextView) view.findViewById(R.id.PaymentDetailsRefundDate);
-
     populateFields();
     return view;
   }
@@ -162,6 +162,16 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     }
 
     if(!transaction.getRefund()){
+      receiptSale = (Button) view.findViewById(R.id.receiptsButton);
+      receiptSale.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          DisplayReceiptOptionsRequest request = new DisplayReceiptOptionsRequest();
+          request.setPaymentId(transaction.getId());
+          request.setOrderId(((POSPayment) transaction).getCloverOrderId());
+          getCloverConnector().displayReceiptOptions(request);
+        }
+      });
       title.setText("Payment Details");
       paymentStatusImage.setImageResource(R.drawable.status_green);
       paymentStatus.setText("Payment Successful");
@@ -186,6 +196,17 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
       else{
         refundRow.setVisibility(View.GONE);
         refund.setText("Refund");
+        receiptRefund = (Button) view.findViewById(R.id.receiptsButtonRefund);
+        receiptRefund.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            DisplayReceiptOptionsRequest request = new DisplayReceiptOptionsRequest();
+            request.setPaymentId(transaction.getId());
+            request.setOrderId(((POSPayment) transaction).getCloverOrderId());
+            request.setRefundId(((POSPayment) transaction).getRefundId());
+            getCloverConnector().displayReceiptOptions(request);
+          }
+        });
       }
       absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount()+((POSPayment)transaction).getTipAmount()));
     }

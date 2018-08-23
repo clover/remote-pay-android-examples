@@ -373,7 +373,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   @Override
   public void payWithPreAuth() {
     CapturePreAuthRequest car = new CapturePreAuthRequest();
-    car.setPaymentID(store.getCurrentOrder().getPreAuth().getId());
+    car.setPaymentId(store.getCurrentOrder().getPreAuth().getId());
     car.setAmount(store.getCurrentOrder().getTotal());
     car.setTipAmount(store.getTipAmount());
     Log.d(TAG, "CapturePreAuthRequest: " + car.toString());

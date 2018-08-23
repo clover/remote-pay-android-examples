@@ -734,7 +734,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
           for(final POSOrder order: store.getOrders()) {
             final POSPayment payment = order.getPreAuth();
             if (payment != null) {
-              if (payment.getId().equals(response.getPaymentID())) {
+              if (payment.getId().equals(response.getPaymentId())) {
                 final long paymentAmount = response.getAmount();
                 runOnUiThread(new Runnable() {
                   @Override
@@ -1137,9 +1137,7 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
         Log.d(TAG, "onDisplayReceiptOptionsResponse: " + response.toString());
         showMessage("Display Receipt Options", Toast.LENGTH_SHORT);
       }
-
     };
-
     cloverConnector.addCloverConnectorListener(ccListener);
     cloverConnector.initializeConnection();
     updateComponentsWithNewCloverConnector();
