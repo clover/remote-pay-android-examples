@@ -53,6 +53,7 @@ import com.clover.remote.client.messages.AuthRequest;
 import com.clover.remote.client.messages.CapturePreAuthRequest;
 import com.clover.remote.client.messages.PreAuthRequest;
 import com.clover.remote.client.messages.SaleRequest;
+import com.clover.remote.client.messages.TransactionRequest;
 import com.clover.remote.order.DisplayDiscount;
 import com.clover.remote.order.DisplayLineItem;
 import com.clover.remote.order.DisplayOrder;
@@ -333,21 +334,24 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
 
     if(vaulted){
-      VaultedCard vaulted = new VaultedCard();
-      vaulted.setCardholderName(vaultedCard.getName());
-      vaulted.setFirst6(vaultedCard.getFirst6());
-      vaulted.setLast4(vaultedCard.getLast4());
-      vaulted.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
-      vaulted.setToken(vaultedCard.getToken());
+      addVaultedCardToRequest(request);
     }
+
 
     Log.d(TAG, "SaleRequest: " + request.toString());
     getCloverConnector().sale(request);
   }
 
-  private void addVaultedToRequest(TransactionRequest request){
-
+  private void addVaultedCardToRequest(TransactionRequest request){
+    VaultedCard vaultedC = new VaultedCard();
+    vaultedC.setCardholderName(vaultedCard.getName());
+    vaultedC.setFirst6(vaultedCard.getFirst6());
+    vaultedC.setLast4(vaultedCard.getLast4());
+    vaultedC.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
+    vaultedC.setToken(vaultedCard.getToken());
+    request.setVaultedCard(vaultedC);
   }
+
 
   @Override
   public void onNewOrderClicked() {
@@ -377,14 +381,11 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+
     if(vaulted){
-      VaultedCard vaulted = new VaultedCard();
-      vaulted.setCardholderName(vaultedCard.getName());
-      vaulted.setFirst6(vaultedCard.getFirst6());
-      vaulted.setLast4(vaultedCard.getLast4());
-      vaulted.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
-      vaulted.setToken(vaultedCard.getToken());
+      addVaultedCardToRequest(request);
     }
+
     Log.d(TAG, "AuthRequest: " + request.toString());
     getCloverConnector().auth(request);
   }
