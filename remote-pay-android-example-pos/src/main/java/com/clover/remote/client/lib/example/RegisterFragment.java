@@ -53,9 +53,11 @@ import com.clover.remote.client.messages.AuthRequest;
 import com.clover.remote.client.messages.CapturePreAuthRequest;
 import com.clover.remote.client.messages.PreAuthRequest;
 import com.clover.remote.client.messages.SaleRequest;
+import com.clover.remote.client.messages.TransactionRequest;
 import com.clover.remote.order.DisplayDiscount;
 import com.clover.remote.order.DisplayLineItem;
 import com.clover.remote.order.DisplayOrder;
+import com.clover.sdk.v3.payments.VaultedCard;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -330,9 +332,26 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+
+    if(vaulted){
+      addVaultedCardToRequest(request);
+    }
+
+
     Log.d(TAG, "SaleRequest: " + request.toString());
     getCloverConnector().sale(request);
   }
+
+  private void addVaultedCardToRequest(TransactionRequest request){
+    VaultedCard vaultedC = new VaultedCard();
+    vaultedC.setCardholderName(vaultedCard.getName());
+    vaultedC.setFirst6(vaultedCard.getFirst6());
+    vaultedC.setLast4(vaultedCard.getLast4());
+    vaultedC.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
+    vaultedC.setToken(vaultedCard.getToken());
+    request.setVaultedCard(vaultedC);
+  }
+
 
   @Override
   public void onNewOrderClicked() {
@@ -342,6 +361,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
     currentOrderFragment.setOrder(store.getCurrentOrder());
   }
+
 
   @Override
   public void onAuthClicked() {
@@ -361,6 +381,11 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+
+    if(vaulted){
+      addVaultedCardToRequest(request);
+    }
+
     Log.d(TAG, "AuthRequest: " + request.toString());
     getCloverConnector().auth(request);
   }

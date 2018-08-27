@@ -132,14 +132,6 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
           if(preAuth){
            showEnterTipDialog();
           }
-          else if(vaulted){
-            showTransactionSettings(new Runnable() {
-              @Override
-              public void run() {
-                makeVaultedSale();
-              }
-            }, TransactionSettingsFragment.transactionTypes.SALE);
-          }
           else {
             showChooseSaleType();
           }
