@@ -56,6 +56,7 @@ import com.clover.remote.client.messages.SaleRequest;
 import com.clover.remote.order.DisplayDiscount;
 import com.clover.remote.order.DisplayLineItem;
 import com.clover.remote.order.DisplayOrder;
+import com.clover.sdk.v3.payments.VaultedCard;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -330,6 +331,16 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+
+    if(vaulted){
+      VaultedCard vaulted = new VaultedCard();
+      vaulted.setCardholderName(vaultedCard.getName());
+      vaulted.setFirst6(vaultedCard.getFirst6());
+      vaulted.setLast4(vaultedCard.getLast4());
+      vaulted.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
+      vaulted.setToken(vaultedCard.getToken());
+    }
+
     Log.d(TAG, "SaleRequest: " + request.toString());
     getCloverConnector().sale(request);
   }
@@ -361,6 +372,14 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    if(vaulted){
+      VaultedCard vaulted = new VaultedCard();
+      vaulted.setCardholderName(vaultedCard.getName());
+      vaulted.setFirst6(vaultedCard.getFirst6());
+      vaulted.setLast4(vaultedCard.getLast4());
+      vaulted.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
+      vaulted.setToken(vaultedCard.getToken());
+    }
     Log.d(TAG, "AuthRequest: " + request.toString());
     getCloverConnector().auth(request);
   }
