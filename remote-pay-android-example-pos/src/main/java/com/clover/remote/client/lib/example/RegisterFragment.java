@@ -345,6 +345,10 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     getCloverConnector().sale(request);
   }
 
+  private void addVaultedToRequest(TransactionRequest request){
+
+  }
+
   @Override
   public void onNewOrderClicked() {
     clearPreAuth();
@@ -353,6 +357,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
     currentOrderFragment.setOrder(store.getCurrentOrder());
   }
+
 
   @Override
   public void onAuthClicked() {
