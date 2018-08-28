@@ -62,6 +62,7 @@
   <string name="device_status">Device Status</string>
   <string name="device_status_resend">Device Status (Resend)</string>
   <string name="disable_duplicate_payment_checking">Disable Duplicate Payment Checking</string>
+  <string name="disable_transaction_restart_on_fail">Disable Restart Transaction on Fail</string>
   <string name="disconnected">Disconnected</string>
   <string name="discounts">Discounts:</string>
   <string name="employee">Employee:</string>

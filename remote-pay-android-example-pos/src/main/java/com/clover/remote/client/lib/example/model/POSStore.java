@@ -68,6 +68,7 @@ public class POSStore {
   private Boolean disableDuplicateChecking;
   private Boolean automaticSignatureConfirmation;
   private Boolean automaticPaymentConfirmation;
+  private Boolean disableRestartTransactionOnFail;
 
   public POSStore() {
     availableItems = new LinkedHashMap<String, POSItem>();
@@ -342,6 +343,14 @@ public class POSStore {
     for(StoreObserver so : storeObservers) {
       so.pendingPaymentsRetrieved(pendingPayments);
     }
+  }
+
+  public Boolean getDisableRestartTransactionOnFail() {
+    return disableRestartTransactionOnFail;
+  }
+
+  public void setDisableRestartTransactionOnFail(Boolean disableRestartTransactionOnFail) {
+    this.disableRestartTransactionOnFail = disableRestartTransactionOnFail;
   }
 
   public Boolean getDisableDuplicateChecking() {

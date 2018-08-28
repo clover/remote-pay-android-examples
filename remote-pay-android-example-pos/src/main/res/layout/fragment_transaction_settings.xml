@@ -327,6 +327,11 @@
               android:layout_height="wrap_content"
               android:text="@string/automatically_confirm_payment_challenges"
               android:id="@+id/AutomaticPaymentConfirmationSwitch"/>
+          <Switch
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/disable_transaction_restart_on_fail"
+              android:id="@+id/DisableRestartTransactionOnFail"/>
         </LinearLayout>
       </LinearLayout>
     </LinearLayout>
