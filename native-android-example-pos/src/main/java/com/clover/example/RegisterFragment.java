@@ -372,6 +372,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
+    request.setDisableRestartTransactionOnFail(store.getDisableRestartTransactionOnFail());
     if(store.getTipMode() == POSStore.TipMode.TIP_PROVIDED) {
       request.setTipAmount(store.getTipAmount());
     }
@@ -418,6 +419,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    request.setDisableRestartTransactionOnFail(store.getDisableRestartTransactionOnFail());
     final IPaymentConnector cloverConnector = paymentConnectorWeakReference.get();
     Log.d(TAG, "AuthRequest: " + request.toString());
     cloverConnector.auth(request);

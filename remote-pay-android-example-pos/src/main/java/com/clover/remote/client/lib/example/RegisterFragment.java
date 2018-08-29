@@ -329,6 +329,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
+    request.setDisableRestartTransactionOnFail(store.getDisableRestartTransactionOnFail());
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
@@ -380,6 +381,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
+    request.setDisableRestartTransactionOnFail(store.getDisableRestartTransactionOnFail());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
 
     if(vaulted){

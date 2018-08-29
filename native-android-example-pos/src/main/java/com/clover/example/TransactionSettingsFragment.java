@@ -59,7 +59,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
   private WeakReference<IPaymentConnector> cloverConnectorWeakReference;
   List<CurrentOrderFragmentListener> listeners = new ArrayList<CurrentOrderFragmentListener>(5);
   private View view;
-  private Switch manualSwitch, swipeSwitch, chipSwitch, contactlessSwitch, printingSwitch, disableReceiptOptionsSwitch, disableDuplicateCheckSwitch, automaticSignatureConfirmationSwitch, automaticPaymentConfirmationSwitch;
+  private Switch manualSwitch, swipeSwitch, chipSwitch, contactlessSwitch, printingSwitch, disableReceiptOptionsSwitch, disableDuplicateCheckSwitch, automaticSignatureConfirmationSwitch, automaticPaymentConfirmationSwitch,disableRestartTransactionOnFailSwitch;
   private RadioGroup allowOfflineRG, forceOfflineRG, approveOfflineNoPromptRG, signatureEntryLocationRG;
   private Spinner tipModeSpinner, signatureEntryLocationSpinner;
   private EditText tipAmountText, signatureThresholdText;
@@ -105,6 +105,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
     tipAmountText = ((EditText) view.findViewById(R.id.tipAmount));
     disableReceiptOptionsSwitch = ((Switch) view.findViewById(R.id.DisableReceiptOptionsSwitch));
     disableDuplicateCheckSwitch = ((Switch) view.findViewById(R.id.DisableDuplicateCheckSwitch));
+    disableRestartTransactionOnFailSwitch = ((Switch) view.findViewById(R.id.DisableRestartTransactionOnFail));
     automaticSignatureConfirmationSwitch = ((Switch) view.findViewById(R.id.AutomaticSignatureConfirmationSwitch));
     automaticPaymentConfirmationSwitch = ((Switch) view.findViewById(R.id.AutomaticPaymentConfirmationSwitch));
     printingSwitch = ((Switch) view.findViewById(R.id.PrintingSwitch));
@@ -360,6 +361,14 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
         }
       }
     });
+    disableRestartTransactionOnFailSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (!updatingSwitches) {
+          store.setDisableRestartTransactionOnFail(isChecked);
+        }
+      }
+    });
 
     printingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
@@ -473,6 +482,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
       printingSwitch.setChecked(store.getDisablePrinting() != null ? store.getDisablePrinting() : false);
       disableReceiptOptionsSwitch.setChecked(store.getDisableReceiptOptions() != null ? store.getDisableReceiptOptions() : false);
       disableDuplicateCheckSwitch.setChecked(store.getDisableDuplicateChecking() != null ? store.getDisableDuplicateChecking() : false);
+      disableRestartTransactionOnFailSwitch.setChecked(store.getDisableRestartTransactionOnFail() != null ? store.getDisableRestartTransactionOnFail() : false);
       automaticSignatureConfirmationSwitch.setChecked(store.getAutomaticSignatureConfirmation() != null ? store.getAutomaticSignatureConfirmation() : false);
       automaticPaymentConfirmationSwitch.setChecked(store.getAutomaticPaymentConfirmation() != null ? store.getAutomaticPaymentConfirmation() : false);
       if (store.getTipMode() != null && getTipModePositionFromString(store.getTipMode().toString()) != -1) {
