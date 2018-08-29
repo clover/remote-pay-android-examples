@@ -69,6 +69,7 @@ public class POSStore implements Serializable{
   private Boolean disableDuplicateChecking;
   private Boolean automaticSignatureConfirmation;
   private Boolean automaticPaymentConfirmation;
+  private Boolean disableRestartTransactionOnFail;
   private List<PendingPaymentEntry> pendingPayments;
 
 
@@ -313,6 +314,13 @@ public class POSStore implements Serializable{
     for(StoreObserver so : storeObservers) {
       so.pendingPaymentsRetrieved(pendingPayments);
     }
+  }
+
+  public Boolean getDisableRestartTransactionOnFail() {
+    return disableRestartTransactionOnFail;
+  }
+  public void setDisableRestartTransactionOnFail(Boolean disableRestartTransactionOnFail) {
+    this.disableRestartTransactionOnFail = disableRestartTransactionOnFail;
   }
 
   public Boolean getDisableDuplicateChecking() {
