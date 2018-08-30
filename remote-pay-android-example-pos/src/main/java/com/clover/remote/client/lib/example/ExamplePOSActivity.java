@@ -1046,6 +1046,9 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       public void onRetrievePrintersResponse(RetrievePrintersResponse response) {
         Log.d(TAG, "onRetrievePrintersResponse: " + response.toString());
         printers = response.getPrinters();
+        if(printers != null){
+          printer = printers.get(0);
+        }
       }
 
       @Override
@@ -1600,7 +1603,6 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       pr = new PrintRequest(lines, lastPrintRequestId, printer.getId());
       Log.d(TAG, "PrintRequest - Print Text: " + pr.toString());
       cloverConnector.print(pr);
-      printer = null;
     }
   }
 
@@ -1613,7 +1615,6 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       pr = new PrintRequest(URL, lastPrintRequestId, printer.getId());
       Log.d(TAG, "PrintRequest - Print Image URL: " + pr.toString());
       cloverConnector.print(pr);
-      printer = null;
     }
   }
 
@@ -1713,7 +1714,6 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
       pr = new PrintRequest(bitmap, lastPrintRequestId, printer.getId());
       Log.d(TAG, "PrintRequest - Print Image: " + pr.toString());
       cloverConnector.print(pr);
-      printer = null;
     }
   }
 
