@@ -61,7 +61,7 @@ public class POSStore implements Serializable{
   private Boolean allowOfflinePayment;
   private Boolean forceOfflinePayment;
   private Boolean disablePrinting;
-  private Long tipAmount;
+  private Long tipAmount = 0L;
   private Long signatureThreshold;
   private DataEntryLocation signatureEntryLocation;
   private TipMode tipMode;

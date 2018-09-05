@@ -1337,8 +1337,6 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
     request.setExternalId(IdUtils.getNextId());
     request.setCardEntryMethods(store.getCardEntryMethods());
     request.setDisablePrinting(store.getDisablePrinting());
-    request.setSignatureEntryLocation(store.getSignatureEntryLocation());
-    request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     Log.d(TAG, "PreAuthRequest: " + request.toString());
