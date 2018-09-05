@@ -104,20 +104,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
       public void onClick(View v) {
         if (store.getCurrentOrder().getItems().size() > 0) {
           if(preAuth){
-            showTransactionSettings(new Runnable() {
-              @Override
-              public void run() {
-                showEnterTipDialog();
-              }
-            }, TransactionSettingsFragment.transactionTypes.PREAUTH );
-          }
-          else if(vaulted){
-            showTransactionSettings(new Runnable() {
-              @Override
-              public void run() {
-                makeVaultedSale();
-              }
-            }, TransactionSettingsFragment.transactionTypes.SALE);
+            showEnterTipDialog();
           }
           else {
             showChooseSaleType();
@@ -152,12 +139,12 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     });
 
     if(vaulted && vaultedCard != null){
-        LinearLayout vaulted = (LinearLayout) v.findViewById(R.id.VaultedCardInfo);
-        vaulted.setVisibility(View.VISIBLE);
-        TextView vaultedName = (TextView) v.findViewById(R.id.VaultedName);
-        TextView vaultedCardNum = (TextView) v.findViewById(R.id.VaultedCardNumber);
-        vaultedName.setText(vaultedCard.getVaultedName());
-        vaultedCardNum.setText(getString(R.string.vault_card_num, vaultedCard.getFirst6(), vaultedCard.getLast4()));
+      LinearLayout vaulted = (LinearLayout) v.findViewById(R.id.VaultedCardInfo);
+      vaulted.setVisibility(View.VISIBLE);
+      TextView vaultedName = (TextView) v.findViewById(R.id.VaultedName);
+      TextView vaultedCardNum = (TextView) v.findViewById(R.id.VaultedCardNumber);
+      vaultedName.setText(vaultedCard.getVaultedName());
+      vaultedCardNum.setText(getString(R.string.vault_card_num, vaultedCard.getFirst6(), vaultedCard.getLast4()));
     }
 
     return v;

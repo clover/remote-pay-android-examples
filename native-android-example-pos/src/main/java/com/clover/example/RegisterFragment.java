@@ -34,6 +34,7 @@ import com.clover.example.model.StoreObserver;
 import com.clover.example.utils.CurrencyUtils;
 import com.clover.example.utils.IdUtils;
 import com.clover.sdk.v3.payments.TipMode;
+import com.clover.sdk.v3.payments.VaultedCard;
 import com.clover.sdk.v3.remotepay.AuthRequest;
 import com.clover.sdk.v3.remotepay.CapturePreAuthRequest;
 import com.clover.sdk.v3.remotepay.PreAuthRequest;
@@ -41,6 +42,8 @@ import com.clover.sdk.v3.remotepay.SaleRequest;
 import com.clover.sdk.v3.order.DisplayDiscount;
 import com.clover.sdk.v3.order.DisplayLineItem;
 import com.clover.sdk.v3.order.DisplayOrder;
+import com.clover.sdk.v3.remotepay.TransactionRequest;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -277,8 +280,6 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setExternalId(IdUtils.getNextId());
     request.setCardEntryMethods(store.getCardEntryMethods());
     request.setDisablePrinting(store.getDisablePrinting());
-    request.setSignatureEntryLocation(store.getSignatureEntryLocation());
-    request.setSignatureThreshold(store.getSignatureThreshold());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     final IPaymentConnector cloverConnector = paymentConnectorWeakReference.get();
@@ -381,9 +382,22 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     }
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    if(vaulted){
+      addVaultedCardToRequest(request);
+    }
     final IPaymentConnector paymentConnector = paymentConnectorWeakReference.get();
     Log.d(TAG, "SaleRequest: " + request.toString());
     paymentConnector.sale(request);
+  }
+
+  private void addVaultedCardToRequest(TransactionRequest request){
+    VaultedCard vaultedC = new VaultedCard();
+    vaultedC.setCardholderName(vaultedCard.getName());
+    vaultedC.setFirst6(vaultedCard.getFirst6());
+    vaultedC.setLast4(vaultedCard.getLast4());
+    vaultedC.setExpirationDate(vaultedCard.getMonth() + vaultedCard.getYear());
+    vaultedC.setToken(vaultedCard.getToken());
+    request.setVaultedCard(vaultedC);
   }
 
   @Override
@@ -420,6 +434,9 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
     request.setDisableRestartTransactionOnFail(store.getDisableRestartTransactionOnFail());
+    if(vaulted){
+      addVaultedCardToRequest(request);
+    }
     final IPaymentConnector cloverConnector = paymentConnectorWeakReference.get();
     Log.d(TAG, "AuthRequest: " + request.toString());
     cloverConnector.auth(request);

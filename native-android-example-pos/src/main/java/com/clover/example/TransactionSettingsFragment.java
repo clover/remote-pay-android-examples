@@ -396,7 +396,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
     });
 
     if(type != transactionTypes.SALE){
-      tips.setVisibility(View.GONE);
+      tips.setVisibility(View.INVISIBLE);
     }
 
     if(type == transactionTypes.AUTH){
