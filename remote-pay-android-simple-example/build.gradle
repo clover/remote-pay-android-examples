@@ -39,8 +39,7 @@ dependencies {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
   compile 'com.android.support.constraint:constraint-layout:1.0.2'
-  compile 'com.clover:clover-remote-interface:237-SNAPSHOT'
-  compile 'com.clover.sdk:remote-pay-android-connector:2.0.0-SNAPSHOT'
-//  compile 'com.clover.sdk:remote-pay-android-connector:2.0.0'
+  compile 'com.clover:clover-remote-interface:238.1'
+  compile 'com.clover.sdk:remote-pay-android-connector:2.0.0'
   testCompile 'junit:junit:4.12'
 }
