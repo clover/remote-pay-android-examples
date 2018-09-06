@@ -14,22 +14,7 @@ buildscript {
         mavenCentral()
         jcenter()
         google()
-        if (project.hasProperty('jenkins')) {
-            maven {
 
-                url "http://isvartifactory.dev.clover.com:8081/artifactory/central-repo"
-
-                credentials {
-                    username = "${artifactory_user}"
-                    password = "${artifactory_password}"
-                }
-
-            }
-        } else {
-            maven {
-                url "http://artifactory.corp.clover.com:8081/artifactory/repo"
-            }
-        }
     }
 
   def mavenPlugin = "com.github.dcendents:android-maven-gradle-plugin:1.5"
@@ -51,37 +36,7 @@ allprojects {
         google()
         jcenter()
     }
-    artifactory {
-        clientConfig.setIncludeEnvVars(true)
-        clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new Date().toString())
 
-        if (project.hasProperty('jenkins')) {
-            contextUrl = 'http://isvartifactory.dev.clover.com:8081/artifactory'
-        }
-        else {
-            contextUrl = 'https://isvartifactory.dev.clover.com:8081/artifactory'
-        }
-        publish {
-            repository {
-                repoKey = 'libs-snapshot-local' // The Artifactory repository key to publish to
-                username = "${artifactory_user}" // The publisher user name
-                password = "${artifactory_password}" // The publisher password
-
-            }
-            defaults {
-                // Reference to Gradle publications defined in the build script.
-                // This is how we tell the Artifactory Plugin which artifacts should be
-                // published to Artifactory.
-                publishArtifacts = true
-                // Properties to be attached to the published artifacts.
-                properties = ['qa.level': 'basic', 'dev.team' : 'core']
-                publishPom = true // Publish generated POM files to Artifactory (true by default)
-            }
-        }
-        resolve {
-            repoKey = 'jcenter'
-        }
-    }
 }
 
 subprojects {
@@ -90,25 +45,7 @@ subprojects {
     mavenLocal()
     mavenCentral()
       google()
-      if (project.hasProperty('jenkins')) {
-          maven {
 
-              url "http://isvartifactory.dev.clover.com:8081/artifactory/central-repo"
-
-              credentials {
-                  username = "${artifactory_user}"
-                  password = "${artifactory_password}"
-              }
-
-          }
-      } else {
-          maven {
-              url "http://artifactory.corp.clover.com:8081/artifactory/repo"
-          }
-          maven {
-              url "http://artifactory.corp.clover.com:8081/artifactory/libs-release"
-          }
-      }
   }
 }
 
