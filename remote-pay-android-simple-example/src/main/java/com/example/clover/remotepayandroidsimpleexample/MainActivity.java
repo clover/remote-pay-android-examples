@@ -73,8 +73,8 @@ public class MainActivity extends Activity {
 
   private void connect(){
     Log.d(TAG, "connecting.....");
-    //cloverConnector = new CloverConnector(getUSBConfiguration());
-    cloverConnector = new CloverConnector(getNetworkConfiguration("10.249.254.214",12345));
+    cloverConnector = new CloverConnector(getUSBConfiguration());
+    //cloverConnector = new CloverConnector(getNetworkConfiguration("Your Clover device ip address here",12345));
     cloverConnector.addCloverConnectorListener(new TestListener(cloverConnector));
     cloverConnector.initializeConnection();
   }
