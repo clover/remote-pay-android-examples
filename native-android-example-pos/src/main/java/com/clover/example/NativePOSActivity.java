@@ -57,6 +57,7 @@ import com.clover.sdk.v3.remotepay.SaleResponse;
 import com.clover.sdk.v3.remotepay.TipAdjustAuthResponse;
 import com.clover.sdk.v3.remotepay.VaultCardResponse;
 import com.clover.sdk.v3.remotepay.VerifySignatureRequest;
+import com.clover.sdk.v3.remotepay.VoidPaymentRefundResponse;
 import com.clover.sdk.v3.remotepay.VoidPaymentResponse;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v3.connector.IPaymentConnector;
@@ -641,6 +642,11 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
       } else {
         showPopupMessage(null, new String[]{"Retrieve Payment error: " + response.getResult()}, false);
       }
+    }
+
+    @Override
+    public void onVoidPaymentRefundResponse(VoidPaymentRefundResponse response) {
+      // Not currently implemented.
     }
 
     @Override
