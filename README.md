@@ -11,7 +11,7 @@ Current version: 3.0.0
 These example apps utilize the Remote Pay Android SDK, which allows your Android-based Point-of-Sale (POS) system to communicate with a [Clover® payment device](https://www.clover.com/pos-hardware/) and process payments. Learn more about [Clover Integrations](https://www.clover.com/integrations).
 
 The Android project includes an example POS, along with other simpler examples. To work with the project effectively, you will need:
-- [Gradle](https://gradle.org) (suggested version 3.4).
+- [Gradle](https://gradle.org) (suggested version 4.10.3).
 - An [Android SDK](http://developer.android.com/sdk/index.html) (17+).
 - An IDE, such as [Android Studio](http://developer.android.com/tools/studio/index.html).
 - To experience transactions end-to-end from the merchant and customer perspectives, we also recommend ordering a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).

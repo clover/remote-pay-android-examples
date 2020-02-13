@@ -33,6 +33,7 @@ import com.clover.example.model.POSStore;
 import com.clover.example.model.StoreObserver;
 import com.clover.example.utils.CurrencyUtils;
 import com.clover.example.utils.IdUtils;
+import com.clover.sdk.v3.merchant.TipSuggestion;
 import com.clover.sdk.v3.payments.TipMode;
 import com.clover.sdk.v3.payments.VaultedCard;
 import com.clover.sdk.v3.remotepay.AuthRequest;
