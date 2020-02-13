@@ -57,6 +57,7 @@ import com.clover.remote.client.messages.TransactionRequest;
 import com.clover.remote.order.DisplayDiscount;
 import com.clover.remote.order.DisplayLineItem;
 import com.clover.remote.order.DisplayOrder;
+import com.clover.sdk.v3.merchant.TipSuggestion;
 import com.clover.sdk.v3.payments.VaultedCard;
 
 import java.lang.ref.WeakReference;

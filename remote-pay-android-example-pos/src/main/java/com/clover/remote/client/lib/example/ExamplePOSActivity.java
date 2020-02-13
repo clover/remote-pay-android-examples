@@ -47,7 +47,9 @@ import com.clover.remote.client.messages.CloverDeviceEvent;
 import com.clover.remote.client.messages.ConfirmPaymentRequest;
 import com.clover.remote.client.messages.CustomActivityRequest;
 import com.clover.remote.client.messages.CustomActivityResponse;
+import com.clover.remote.client.messages.CustomerProvidedDataEvent;
 import com.clover.remote.client.messages.DisplayReceiptOptionsResponse;
+import com.clover.remote.client.messages.InvalidStateTransitionResponse;
 import com.clover.remote.client.messages.ManualRefundRequest;
 import com.clover.remote.client.messages.ManualRefundResponse;
 import com.clover.remote.client.messages.MessageFromActivity;
@@ -1133,6 +1135,16 @@ public class ExamplePOSActivity extends Activity implements CurrentOrderFragment
         } else {
           showPopupMessage(null, new String[]{"Retrieve Payment error: " + response.getResult()}, false);
         }
+      }
+
+      @Override
+      public void onInvalidStateTransitionResponse(InvalidStateTransitionResponse response) {
+        Log.d(TAG, "onInvalidStateTransitionResponse: " + response.toString());
+      }
+
+      @Override
+      public void onCustomerProvidedData(CustomerProvidedDataEvent event) {
+        Log.d(TAG, "onCustomerProvidedData: " + event.toString());
       }
 
       @Override

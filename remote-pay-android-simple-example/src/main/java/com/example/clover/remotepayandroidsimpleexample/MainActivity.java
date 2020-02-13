@@ -107,6 +107,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onConfirmPaymentRequest(ConfirmPaymentRequest request) {
+      // Duplicate and offline challenges can be handled here.
     }
 
     @Override
