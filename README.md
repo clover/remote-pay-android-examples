@@ -4,7 +4,7 @@
 
 ## Version
 
-Current version: 2.0.0
+Current version: 3.0.0
 
 ## Overview
 
@@ -16,13 +16,20 @@ The Android project includes an example POS, along with other simpler examples. 
 - An IDE, such as [Android Studio](http://developer.android.com/tools/studio/index.html).
 - To experience transactions end-to-end from the merchant and customer perspectives, we also recommend ordering a [Clover DevKit](http://cloverdevkit.com/collections/devkits/products/clover-mini-dev-kit).
 
-## Getting connected
-1. Download the USB Pay Display app from the Clover App Market onto your Clover DevKit. You can also use the [Secure Network Pay Display app](https://docs.clover.com/clover-platform/docs/pay-display-apps#section--secure-network-pay-display-) for a local network connection with the Clover DevKit. The remaining steps assume that you are using the USB Pay Display app.
+## Getting connected with USB Pay Display
+1. Download the USB Pay Display app from the Clover App Market onto your Clover DevKit. 
 2. Open the USB Pay Display app.
 3. Run the Clover Connector Android Example POS app on your Android POS device or emulator.
 4. The Example POS screen and device connection status should appear. If the connection was successful, the device status should be "connected." If the device remains disconnected, verify that:
 	1) You are connecting the correct cable to the correct connection point on the Clover device. (On the Clover Mini, this is the USB port with the Clover logo.) You will need to use the USB cable that came with the device.
 	2) Your Android device supports “host” mode, which is also referred to as OTG mode. This functionality is required to communicate with the Clover Mini, which will operate in “accessory” mode.
+	
+## Getting connected
+1. Download the Secure Network Pay Display app from the Clover App Market onto your Clover DevKit.
+2. Configure Secure Network Pay Display - https://docs.clover.com/clover-platform/docs/configuring-secure-network-pay-display#section-device-server-certificates
+3. Open MainActivity.java and uncomment the following line: 
+    ```cloverConnector = new CloverConnector(getNetworkConfiguration("ip-address", 12345))```
+4) Enter the ip address that Secure Network Pay Display shows in the start-up screen.
 
 ## Additional resources
 

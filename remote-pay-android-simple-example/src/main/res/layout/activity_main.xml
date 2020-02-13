@@ -43,14 +43,6 @@
       android:text="@string/make_refund"
       android:onClick="makeRefund"/>
 
-  <Button
-      android:id="@+id/test_printing_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:text="TEST NEW PRINTING"
-      android:onClick="testPrinting"/>
-
   <Button android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
