@@ -9,7 +9,8 @@ android {
   defaultConfig {
     applicationId "com.example.clover.myapplication"
     minSdkVersion 17
-    targetSdkVersion 17
+    //noinspection ExpiredTargetSdkVersion
+    targetSdkVersion 25
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -34,12 +35,12 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile 'com.android.support.constraint:constraint-layout:1.0.2'
-  compile 'com.clover:clover-remote-interface:238.1'
-  compile 'com.clover.sdk:remote-pay-android-connector:3.0.0'
-  testCompile 'junit:junit:4.12'
+  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+  implementation 'com.clover:clover-remote-interface:243'
+  implementation 'com.clover.sdk:remote-pay-android-connector:3.0.0'
+  testImplementation 'junit:junit:4.12'
 }

@@ -34,7 +34,6 @@ import java.security.cert.CertificateFactory;
  *    5) Close the underlying connection via dispose() method
  */
 
-
 public class MainActivity extends Activity {
 
   private final String TAG = MainActivity.class.getSimpleName();
@@ -73,8 +72,12 @@ public class MainActivity extends Activity {
 
   private void connect(){
     Log.d(TAG, "connecting.....");
+    // Default to using USB Pay Display, comment the line below if you would like to use a
+    // network connection and Secure Network Pay Display.
     cloverConnector = new CloverConnector(getUSBConfiguration());
-    //cloverConnector = new CloverConnector(getNetworkConfiguration("Your Clover device ip address here",12345));
+    // Uncomment the below line (and comment the line above) if you would like to use a network connection and Secure
+    // Network Pay Display. See the instructions in the README if you need more information.
+    //cloverConnector = new CloverConnector(getNetworkConfiguration("ip-address", 12345));
     cloverConnector.addCloverConnectorListener(new TestListener(cloverConnector));
     cloverConnector.initializeConnection();
   }
@@ -106,7 +109,6 @@ public class MainActivity extends Activity {
     public void onConfirmPaymentRequest(ConfirmPaymentRequest request) {
     }
 
-
     @Override
     public void onDeviceReady(MerchantInfo merchantInfo) {
       super.onDeviceReady(merchantInfo);
@@ -119,10 +121,6 @@ public class MainActivity extends Activity {
     return new USBCloverDeviceConfiguration(this, APP_ID);
   }
 
-  public CloverDeviceConfiguration getNetworkConfiguration(String ip) {
-    return getNetworkConfiguration(ip, null);
-  }
-
   public CloverDeviceConfiguration getNetworkConfiguration(String ip, Integer port) {
     Integer dvcPort = port != null ? port : Integer.valueOf(12345);
     try {
@@ -130,7 +128,8 @@ public class MainActivity extends Activity {
       KeyStore trustStore  = createTrustStore();
 
       // For WebSocket configuration, we must handle the device pairing via callback
-      return new WebSocketCloverDeviceConfiguration(endpoint,APP_ID, trustStore, POS_NAME, DEVICE_NAME, null) {
+      return new WebSocketCloverDeviceConfiguration(endpoint, APP_ID, trustStore, POS_NAME, DEVICE_NAME, null) {
+
         @Override
         public void onPairingCode(final String pairingCode) {
           runOnUiThread(new Runnable() {
