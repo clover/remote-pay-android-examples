@@ -10,7 +10,7 @@ android {
     applicationId "com.example.clover.myapplication"
     minSdkVersion 17
     //noinspection ExpiredTargetSdkVersion
-    targetSdkVersion 25
+    targetSdkVersion 17
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

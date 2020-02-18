@@ -11,7 +11,7 @@ android {
   defaultConfig {
     minSdkVersion 17
     //noinspection ExpiredTargetSdkVersion
-    targetSdkVersion 25
+    targetSdkVersion 17
   }
 
   lintOptions {
