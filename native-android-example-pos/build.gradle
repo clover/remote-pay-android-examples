@@ -14,6 +14,7 @@ android {
 
   defaultConfig {
     minSdkVersion 17
+    //noinspection ExpiredTargetSdkVersion
     targetSdkVersion 17
   }
 
