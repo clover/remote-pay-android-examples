@@ -185,7 +185,9 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
             store.createOrder(false);
             CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
-            currentOrderFragment.setOrder(store.getCurrentOrder());
+            if (currentOrderFragment != null) {
+              currentOrderFragment.setOrder(store.getCurrentOrder());
+            }
             hidePreAuth();
             showRegister(null);
             displayConnector.showWelcomeScreen();
