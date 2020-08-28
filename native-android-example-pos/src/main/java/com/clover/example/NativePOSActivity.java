@@ -185,7 +185,9 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
 
             store.createOrder(false);
             CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
-            currentOrderFragment.setOrder(store.getCurrentOrder());
+            if (currentOrderFragment != null) {
+              currentOrderFragment.setOrder(store.getCurrentOrder());
+            }
             hidePreAuth();
             showRegister(null);
             displayConnector.showWelcomeScreen();
@@ -1329,7 +1331,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
       request.setAmount(refundAmount);
       request.setCardEntryMethods(store.getCardEntryMethods());
       request.setDisablePrinting(store.getDisablePrinting());
-      request.setDisableReceiptSelection(store.getDisableReceiptOptions());
+      request.setDisableReceiptSelection(false);
       Log.d(TAG, "ManualRefundRequest: " + request.toString());
       paymentConnector.manualRefund(request);
     } catch (NumberFormatException nfe) {
@@ -1343,7 +1345,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
     request.setExternalId(IdUtils.getNextId());
     request.setCardEntryMethods(store.getCardEntryMethods());
     request.setDisablePrinting(store.getDisablePrinting());
-    request.setDisableReceiptSelection(store.getDisableReceiptOptions());
+    request.setDisableReceiptSelection(false);
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
     Log.d(TAG, "PreAuthRequest: " + request.toString());
     paymentConnector.preAuth(request);
