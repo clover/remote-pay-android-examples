@@ -50,7 +50,6 @@ import com.clover.sdk.v3.remotepay.ReadCardDataRequest;
 import com.clover.sdk.v3.remotepay.ReadCardDataResponse;
 import com.clover.sdk.v3.remotepay.RefundPaymentResponse;
 import com.clover.sdk.v3.remotepay.ResponseCode;
-import com.clover.sdk.v3.remotepay.RetrievePaymentRequest;
 import com.clover.sdk.v3.remotepay.RetrievePaymentResponse;
 import com.clover.sdk.v3.remotepay.RetrievePendingPaymentsResponse;
 import com.clover.sdk.v3.remotepay.SaleResponse;
@@ -176,7 +175,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
             long tip = _payment.getTipAmount() == null ? 0 : _payment.getTipAmount();//
             String cardDetails = cardTransaction.getCardType().toString() + " " + cardTransaction.getLast4();
             POSPayment payment = new POSPayment(_payment.getAmount(), cardDetails, cardTransaction.getCardType(), new Date(_payment.getCreatedTime()), _payment.getId(), _payment.getTender().getLabel(),
-                "Auth", cardTransaction.getType(), false, cardTransaction.getEntryType(), cardTransaction.getState(), cashback, _payment.getOrder().getId(), _payment.getExternalPaymentId(), _payment.getTaxAmount(), tip);
+                "Auth", cardTransaction.getType(), false, cardTransaction.getEntryType(), cardTransaction.getState(), cashback, _payment.getOrder().getId(), _payment.getExternalPaymentId(), _payment.getTaxAmount(), tip, _payment.getAdditionalCharges());
             setPaymentStatus(payment, response);
             payment.setResult(_payment.getResult());
             store.addPaymentToOrder(payment, store.getCurrentOrder());
@@ -184,7 +183,14 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
             showMessage("Auth successfully processed.", Toast.LENGTH_SHORT);
 
             store.createOrder(false);
-            CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
+
+            CurrentOrderFragment currentOrderFragment;
+            if(getApplicationContext().getResources().getBoolean(R.bool.isFlex)) {
+              currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentByTag("CURRENT_ORDER");
+            }
+            else{
+              currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
+            }
             if (currentOrderFragment != null) {
               currentOrderFragment.setOrder(store.getCurrentOrder());
             }
@@ -212,7 +218,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
             long cashback = _payment.getCashbackAmount() == null ? 0 : _payment.getCashbackAmount();
             long tip = _payment.getTipAmount() == null ? 0 : _payment.getTipAmount();
             POSPayment payment = new POSPayment(_payment.getAmount(), cardDetails, cardTransaction.getCardType(), new Date(_payment.getCreatedTime()), _payment.getId(), _payment.getTender().getLabel(),
-                "PreAuth", cardTransaction.getType(), false, cardTransaction.getEntryType(), cardTransaction.getState(), cashback, _payment.getOrder().getId(), _payment.getExternalPaymentId(), _payment.getTaxAmount(), tip);
+                "PreAuth", cardTransaction.getType(), false, cardTransaction.getEntryType(), cardTransaction.getState(), cashback, _payment.getOrder().getId(), _payment.getExternalPaymentId(), _payment.getTaxAmount(), tip, _payment.getAdditionalCharges());
             setPaymentStatus(payment, response);
             payment.setResult(_payment.getResult());
             store.getCurrentOrder().setPreAuth(payment);
@@ -278,7 +284,13 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
                     @Override
                     public void run() {
                       store.createOrder(false);
-                      CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
+                      CurrentOrderFragment currentOrderFragment;
+                      if(getApplicationContext().getResources().getBoolean(R.bool.isFlex)) {
+                        currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentByTag("CURRENT_ORDER");
+                      }
+                      else{
+                        currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
+                      }
                       if(currentOrderFragment != null) {
                         currentOrderFragment.setOrder(store.getCurrentOrder());
                       }
@@ -348,7 +360,7 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
             long cashback = _payment.getCashbackAmount() == null ? 0 : _payment.getCashbackAmount();
             long tip = _payment.getTipAmount() == null ? 0 : _payment.getTipAmount();
             POSPayment payment = new POSPayment(_payment.getAmount(), cardDetails, cardTransaction.getCardType(), new Date(_payment.getCreatedTime()), _payment.getId(), _payment.getTender().getLabel(),
-                "Payment", cardTransaction.getType(), false, cardTransaction.getEntryType(), cardTransaction.getState(), cashback, _payment.getOrder().getId(), _payment.getExternalPaymentId(), _payment.getTaxAmount(), tip);
+                "Payment", cardTransaction.getType(), false, cardTransaction.getEntryType(), cardTransaction.getState(), cashback, _payment.getOrder().getId(), _payment.getExternalPaymentId(), _payment.getTaxAmount(), tip, _payment.getAdditionalCharges());
             setPaymentStatus(payment, response);
             payment.setResult(_payment.getResult());
             store.addPaymentToOrder(payment, store.getCurrentOrder());
@@ -365,7 +377,9 @@ public class NativePOSActivity extends Activity implements CurrentOrderFragment.
                 else{
                   currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
                 }
-                currentOrderFragment.setOrder(store.getCurrentOrder());
+                if (currentOrderFragment != null) {
+                  currentOrderFragment.setOrder(store.getCurrentOrder());
+                }
                 hidePreAuth();
                 showRegister(null);
               }

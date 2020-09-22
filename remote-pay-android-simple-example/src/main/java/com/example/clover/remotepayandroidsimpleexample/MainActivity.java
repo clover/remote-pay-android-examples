@@ -1,4 +1,5 @@
 package com.example.clover.remotepayandroidsimpleexample;
+
 import com.clover.remote.client.CloverConnector;
 import com.clover.remote.client.CloverDeviceConfiguration;
 import com.clover.remote.client.DefaultCloverConnectorListener;
@@ -26,13 +27,14 @@ import java.security.cert.CertificateFactory;
 /**
  * This example class illustrates how to create and terminate a connection to a clover device.
  * The dialog which occurs is:
- *    1) Create CloverConnector based upon the specified configuration
- *    2) Register the CloverConnectorListener with the CloverConnector
- *    3) Initialize the CloverConnector via initializeConnection() method
- *      a) If network connection configured, input the pairing code provided by the device callback
- *    4) Handle onDeviceReady() callback from device indicating connection was made
- *    5) Close the underlying connection via dispose() method
+ * 1) Create CloverConnector based upon the specified configuration
+ * 2) Register the CloverConnectorListener with the CloverConnector
+ * 3) Initialize the CloverConnector via initializeConnection() method
+ * a) If network connection configured, input the pairing code provided by the device callback
+ * 4) Handle onDeviceReady() callback from device indicating connection was made
+ * 5) Close the underlying connection via dispose() method
  */
+
 
 public class MainActivity extends Activity {
 
@@ -52,25 +54,25 @@ public class MainActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    textConnect = (TextView)findViewById(R.id.connector_text);
+    textConnect = (TextView) findViewById(R.id.connector_text);
     cloverConnector = null;
   }
 
   @Override
-  protected void onResume(){
+  protected void onResume() {
     super.onResume();
-    if(cloverConnector == null) {
+    if (cloverConnector == null) {
       connect();
     }
   }
 
   @Override
-  protected void onDestroy(){
+  protected void onDestroy() {
     super.onDestroy();
     exit();
   }
 
-  private void connect(){
+  private void connect() {
     Log.d(TAG, "connecting.....");
     // Default to using USB Pay Display, comment the line below if you would like to use a
     // network connection and Secure Network Pay Display.
@@ -82,7 +84,7 @@ public class MainActivity extends Activity {
     cloverConnector.initializeConnection();
   }
 
-  private void connected(){
+  private void connected() {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -91,8 +93,8 @@ public class MainActivity extends Activity {
     });
   }
 
-  private void exit(){
-    Log.d(TAG,"exiting");
+  private void exit() {
+    Log.d(TAG, "exiting");
     cloverConnector.dispose();
     textConnect.setText(R.string.disconnected);
     synchronized (this) {
@@ -107,8 +109,8 @@ public class MainActivity extends Activity {
 
     @Override
     public void onConfirmPaymentRequest(ConfirmPaymentRequest request) {
-      // Duplicate and offline challenges can be handled here.
     }
+
 
     @Override
     public void onDeviceReady(MerchantInfo merchantInfo) {
@@ -122,15 +124,18 @@ public class MainActivity extends Activity {
     return new USBCloverDeviceConfiguration(this, APP_ID);
   }
 
+  public CloverDeviceConfiguration getNetworkConfiguration(String ip) {
+    return getNetworkConfiguration(ip, null);
+  }
+
   public CloverDeviceConfiguration getNetworkConfiguration(String ip, Integer port) {
     Integer dvcPort = port != null ? port : Integer.valueOf(12345);
     try {
       URI endpoint = new URI("wss://" + ip + ":" + dvcPort + "/remote_pay");
-      KeyStore trustStore  = createTrustStore();
+      KeyStore trustStore = createTrustStore();
 
       // For WebSocket configuration, we must handle the device pairing via callback
       return new WebSocketCloverDeviceConfiguration(endpoint, APP_ID, trustStore, POS_NAME, DEVICE_NAME, null) {
-
         @Override
         public void onPairingCode(final String pairingCode) {
           runOnUiThread(new Runnable() {
@@ -190,7 +195,7 @@ public class MainActivity extends Activity {
       trustStore.setCertificateEntry("prod", cert);
 
       return trustStore;
-    } catch(Throwable t) {
+    } catch (Throwable t) {
       t.printStackTrace();
     }
     return null;
@@ -228,33 +233,33 @@ public class MainActivity extends Activity {
     return sb.toString();
   }
 
-  public void showMessage(View view){
+  public void showMessage(View view) {
     Log.d(TAG, "show message called");
     Intent intent = new Intent();
     intent.setClass(this, ShowMessageActivity.class);
     startActivity(intent);
   }
 
-  public void makeSale(View view){
+  public void makeSale(View view) {
     Log.d(TAG, "make sale called");
     Intent intent = new Intent();
     intent.setClass(this, MakeSaleActivity.class);
     startActivity(intent);
   }
 
-  public void makeRefund(View view){
+  public void makeRefund(View view) {
     Log.d(TAG, "make refund called");
     Intent intent = new Intent();
     intent.setClass(this, MakeRefundActivity.class);
     startActivity(intent);
   }
 
-  public void sendDeviceLogs(View view){
+  public void sendDeviceLogs(View view) {
     Log.d(TAG, "send device logs clicked");
     cloverConnector.sendDebugLog("because");
   }
 
-  public static ICloverConnector getCloverConnector (){
+  public static ICloverConnector getCloverConnector() {
     return cloverConnector;
   }
 

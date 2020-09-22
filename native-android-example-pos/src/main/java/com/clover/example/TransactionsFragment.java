@@ -16,6 +16,7 @@
 
 package com.clover.example;
 
+import androidx.annotation.Nullable;
 import com.clover.example.adapter.TransactionsListViewAdapter;
 import com.clover.example.model.POSCard;
 import com.clover.example.model.POSOrder;
@@ -58,6 +59,12 @@ public class TransactionsFragment extends Fragment {
 
   public TransactionsFragment(){
 
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
 
   @Override

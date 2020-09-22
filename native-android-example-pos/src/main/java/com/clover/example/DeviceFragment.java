@@ -16,7 +16,7 @@
 
 package com.clover.example;
 
-import com.clover.sdk.util.Platform;
+import com.clover.sdk.util.Platform2;
 import com.clover.sdk.v3.connector.IPaymentConnector;
 import android.app.Fragment;
 import android.net.Uri;
@@ -50,6 +50,12 @@ public class DeviceFragment extends Fragment{
   }
 
   @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_device, container, false);
@@ -73,24 +79,21 @@ public class DeviceFragment extends Fragment{
       disableView(view);
     }
 
-    if(Platform.isCloverGoldenOak()){
-      enableView(showMessageText);
-      enableView(showMessage);
-      enableView(showWelcomeMessage);
-      enableView(showThankYou);
-    }
-    else {
+    if(!Platform2.supportsFeature(view.getContext(),Platform2.Feature.CUSTOMER_FACING_EXTERNAL_DISPLAY)) {
+      enableView(showMessageText);    // mini only, only makes sense for a customer facing screen in this context
+      enableView(showMessage);        // mini only, only makes sense for a customer facing screen in this context
+      enableView(showWelcomeMessage); // mini only, only makes sense for a customer facing screen in this context
+      enableView(showThankYou);       // mini only, only makes sense for a customer facing screen in this context
+    } else {
       disableView(showMessageText);
       disableView(showMessage);
       disableView(showWelcomeMessage);
       disableView(showThankYou);
     }
-    if(!Platform.isCloverStation() && !Platform.isCloverGoldenOak()){
-      enableView(readCardData);
+    // Closeout is not supported on devices that don't have a card reader.  Read card however will be passed through to the attached device.
+    if(Platform2.supportsFeature(view.getContext(),Platform2.Feature.SECURE_PAYMENTS)) {
       enableView(closeout);
-    }
-    else{
-      disableView(readCardData);
+    } else {
       disableView(closeout);
     }
 

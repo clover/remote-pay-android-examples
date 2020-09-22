@@ -16,12 +16,15 @@
 
 package com.clover.remote.client.lib.example.model;
 
+import com.clover.sdk.v3.payments.AdditionalChargeAmount;
 import com.clover.sdk.v3.payments.CardEntryType;
 import com.clover.sdk.v3.payments.CardTransactionState;
 import com.clover.sdk.v3.payments.CardTransactionType;
 import com.clover.sdk.v3.payments.CardType;
+import com.clover.sdk.v3.payments.IncrementalAuthorization;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class POSPayment extends POSTransaction implements Serializable {
   private transient POSOrder order;
   private String externalPaymentId, refundId;
   private List<POSRefund> refunds;
+  private List<POSAdditionalChargeAmount> additionalCharges;
 
   public enum Status {
     PAID, VOIDED, REFUNDED, AUTHORIZED, PREAUTHORIZED
@@ -53,7 +57,7 @@ public class POSPayment extends POSTransaction implements Serializable {
   }
 
   public POSPayment(long amount, String cardDetails, CardType cardType, Date date, String id, String tender, String transactionTitle, CardTransactionType transactionType, boolean refund,
-                    CardEntryType entryMethod, CardTransactionState transactionState, long cashBackAmount, String cloverOrderId, String externalPaymentId, long taxAmount, long tipAmount){
+                    CardEntryType entryMethod, CardTransactionState transactionState, long cashBackAmount, String cloverOrderId, String externalPaymentId, long taxAmount, long tipAmount, List<AdditionalChargeAmount> additionalCharges){
     super (amount, cardDetails, cardType, date, id, tender, transactionTitle, transactionType, refund, entryMethod,  transactionState);
 
     this.cashBackAmount = cashBackAmount;
@@ -61,6 +65,12 @@ public class POSPayment extends POSTransaction implements Serializable {
     this.externalPaymentId = externalPaymentId;
     this.taxAmount = taxAmount;
     this.tipAmount = tipAmount;
+    if (additionalCharges != null) {
+      this.additionalCharges = new ArrayList<>();
+      for (AdditionalChargeAmount thisAdditionalCharge : additionalCharges) {
+        this.additionalCharges.add(new POSAdditionalChargeAmount(thisAdditionalCharge.getId(), thisAdditionalCharge.getAmount(), thisAdditionalCharge.getRate()));
+      }
+    }
   }
 
   private Status _status;
@@ -104,8 +114,40 @@ public class POSPayment extends POSTransaction implements Serializable {
     this.tipAmount = tipAmount;
   }
 
+  // Returns the sum of all additional charges
+  public long getAdditionalChargesTotal() {
+    long additionalCharges = 0;
+    if (getAdditionalCharges() != null) {
+      for (POSAdditionalChargeAmount additionalChargeAmount : getAdditionalCharges()) {
+        additionalCharges += additionalChargeAmount.getAmount();
+      }
+    }
+    return additionalCharges;
+  }
+  // Returns the sum of all incremental auths
+  public long getIncrementalAuthTotal() {
+    long incrementalAuth = 0;
+    if (getIncrements() != null) {
+      for (IncrementalAuthorization incrementalAuthorization : getIncrements()) {
+        incrementalAuth += incrementalAuthorization.getAmount();
+      }
+    }
+    return incrementalAuth;
+  }
+
+  // Returns the charge amount, not including additional charges, incremental auths, and tips
   public long getAmount() {
     return super.getAmount();
+  }
+
+  // Returns the total charge amount, including all additional charges and incremental auths
+  public long getAmountWithAdditionalCharges() {
+    return getAmount() + getAdditionalChargesTotal() + getIncrementalAuthTotal();
+  }
+
+  // Returns the total charge amount, including all additional charges, incremental auths, and tips
+  public long getAmountWithAdditionalChargesAndTip() {
+    return getAmountWithAdditionalCharges() + getTipAmount();
   }
 
   public void setExternalPaymentId(String externalPaymentId) {
@@ -169,4 +211,13 @@ public class POSPayment extends POSTransaction implements Serializable {
   public void setRefundId(String refundId) {
     this.refundId = refundId;
   }
+
+  public List<POSAdditionalChargeAmount> getAdditionalCharges() {
+    return additionalCharges;
+  }
+
+  public void setAdditionalCharges(List<POSAdditionalChargeAmount> additionalCharges) {
+    this.additionalCharges = additionalCharges;
+  }
+
 }

@@ -53,6 +53,7 @@ public class RefundPaymentFragment extends DialogFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setStyle(STYLE_NO_TITLE, R.style.CustomDialog);
+    setRetainInstance(true);
   }
 
   @Override

@@ -17,7 +17,7 @@
 package com.clover.remote.client.lib.example;
 
 import android.app.Activity;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;

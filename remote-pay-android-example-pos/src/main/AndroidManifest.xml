@@ -18,10 +18,6 @@
     package="com.clover.remote.client.lib.example"
     android:versionName="1.0" >
 
-    <uses-sdk>
-        17
-    </uses-sdk>
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

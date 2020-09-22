@@ -20,7 +20,6 @@ package com.clover.remote.client.lib.example;
 import com.clover.remote.client.lib.example.utils.CurrencyUtils;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.fragment.app.DialogFragment;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

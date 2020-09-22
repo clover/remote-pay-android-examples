@@ -20,10 +20,12 @@ import com.clover.sdk.v3.payments.CardEntryType;
 import com.clover.sdk.v3.payments.CardTransactionState;
 import com.clover.sdk.v3.payments.CardTransactionType;
 import com.clover.sdk.v3.payments.CardType;
+import com.clover.sdk.v3.payments.IncrementalAuthorization;
 import com.clover.sdk.v3.payments.Result;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class POSTransaction implements Serializable {
 
@@ -33,6 +35,7 @@ public class POSTransaction implements Serializable {
   CardEntryType entryMethod;
   CardTransactionType transactionType;
   CardTransactionState transactionState;
+  List<IncrementalAuthorization> increments;
   private Result result;
   private Date date = new Date();
   private boolean refund = false;
@@ -175,4 +178,8 @@ public class POSTransaction implements Serializable {
   public void setResult(Result result) {
     this.result = result;
   }
+
+  public List<IncrementalAuthorization> getIncrements() { return increments; }
+
+  public void setIncrements(List<IncrementalAuthorization> increments) { this.increments = increments; }
 }

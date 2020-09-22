@@ -17,7 +17,7 @@
 package com.clover.remote.client.lib.example;
 
 import android.app.Activity;
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -177,7 +177,7 @@ public class OrdersFragment extends Fragment implements OrderObserver {
   public void openInRegister(POSOrder order){
     store.setCurrentOrder(order);
     ((ExamplePOSActivity)getActivity()).showRegister(null);
-
+    ((ExamplePOSActivity)getActivity()).showPreauthInfo(null);
   }
 
   // TODO: Rename method, update argument and hook method into UI event
@@ -295,6 +295,14 @@ public class OrdersFragment extends Fragment implements OrderObserver {
         return Integer.parseInt(rhs.id) - Integer.parseInt(lhs.id);
       }
     });
+
+      /*
+      Orders fragment can become detached from activity, but still receive transaction updates. So
+      we want to guard against null here.
+       */
+    if (getActivity() == null) {
+      return;
+    }
 
     getActivity().runOnUiThread(new Runnable() {
       @Override public void run() {

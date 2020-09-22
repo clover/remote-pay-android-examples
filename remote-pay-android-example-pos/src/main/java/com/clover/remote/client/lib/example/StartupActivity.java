@@ -17,7 +17,7 @@
 package com.clover.remote.client.lib.example;
 
 import com.clover.remote.client.lib.example.qrCode.barcode.BarcodeCaptureActivity;
-import com.clover.sdk.util.Platform;
+import com.clover.sdk.util.Platform2;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.scanner.BarcodeResult;
 import com.clover.sdk.v3.scanner.BarcodeScanner;
@@ -29,9 +29,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.display.DisplayManager;
+import android.hardware.input.InputManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.InputDevice;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -50,6 +55,7 @@ public class StartupActivity extends Activity {
   public static final String LAN_PAY_DISPLAY_URL = "LAN_PAY_DISPLAY_URL";
   public static final String CONNECTION_MODE = "CONNECTION_MODE";
   public static final String USB = "USB";
+  public static final String GMC = "GMC";
   public static final String LAN = "LAN";
   private static final int BARCODE_READER_REQUEST_CODE = 1;
   public static final String WS_CONFIG = "WS";
@@ -73,7 +79,8 @@ public class StartupActivity extends Activity {
     }
   };
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_startup);
 
@@ -83,15 +90,16 @@ public class StartupActivity extends Activity {
       getActionBar().hide();
     }
 
-    RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
+    RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
     group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-      @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+      @Override
+      public void onCheckedChanged(RadioGroup group, int checkedId) {
         TextView textView = (TextView) findViewById(R.id.lanPayDisplayAddress);
         textView.setEnabled(checkedId == R.id.lanRadioButton);
       }
     });
 
-    Button connectButton = (Button)findViewById(R.id.connectButton);
+    Button connectButton = (Button) findViewById(R.id.connectButton);
     connectButton.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
@@ -102,18 +110,18 @@ public class StartupActivity extends Activity {
 
     // initialize...
     TextView textView = (TextView) findViewById(R.id.lanPayDisplayAddress);
-    String url = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE).getString(LAN_PAY_DISPLAY_URL,  "wss://192.168.1.101:12345/remote_pay");
+    String url = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE).getString(LAN_PAY_DISPLAY_URL, "wss://192.168.1.101:12345/remote_pay");
 
     textView.setText(url);
-    textView.setEnabled(((RadioGroup)findViewById(R.id.radioGroup)).getCheckedRadioButtonId() == R.id.lanRadioButton);
+    textView.setEnabled(((RadioGroup) findViewById(R.id.radioGroup)).getCheckedRadioButtonId() == R.id.lanRadioButton);
 
     String mode = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE).getString(CONNECTION_MODE, USB);
 
-    ((RadioButton)findViewById(R.id.lanRadioButton)).setChecked(LAN.equals(mode));
-    ((RadioButton)findViewById(R.id.usbRadioButton)).setChecked(!LAN.equals(mode));
+    ((RadioButton) findViewById(R.id.lanRadioButton)).setChecked(LAN.equals(mode));
+    ((RadioButton) findViewById(R.id.usbRadioButton)).setChecked(!LAN.equals(mode));
 
     // Switch out the barcode scanner for the Clover Devices
-    if (Platform.isClover()) {
+    if (Platform2.isClover()) {
       cloverBarcodeScanner = new BarcodeScanner(this);
     }
   }
@@ -122,7 +130,7 @@ public class StartupActivity extends Activity {
 
     String _serverBaseURL = PreferenceManager.getDefaultSharedPreferences(this).getString(ExamplePOSActivity.EXAMPLE_POS_SERVER_KEY, "wss://10.0.0.101:12345/remote_pay");
 
-    TextView tv = (TextView)findViewById(R.id.lanPayDisplayAddress);
+    TextView tv = (TextView) findViewById(R.id.lanPayDisplayAddress);
     tv.setText(_serverBaseURL);
 
     Log.d(TAG, _serverBaseURL);
@@ -161,9 +169,11 @@ public class StartupActivity extends Activity {
       unregisterCloverBarcodeScanner();
     }
   }
+
   private void registerCloverBarcodeScanner() {
     registerReceiver(cloverBarcodeReceiver, new IntentFilter(BarcodeResult.INTENT_ACTION));
   }
+
   private void unregisterCloverBarcodeScanner() {
     unregisterReceiver(cloverBarcodeReceiver);
   }
@@ -178,29 +188,57 @@ public class StartupActivity extends Activity {
 
   public void connect(View view, boolean clearToken) {
 
-    RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
+    RadioGroup group = (RadioGroup) findViewById(R.id.radioGroup);
     SharedPreferences prefs = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE);
     SharedPreferences.Editor editor = prefs.edit();
     URI uri = null;
     String config;
 
-    if(group.getCheckedRadioButtonId() == R.id.usbRadioButton) {
-      config = USB;
-      editor.putString(CONNECTION_MODE, USB);
+    if (group.getCheckedRadioButtonId() == R.id.usbRadioButton) {
+      if (Platform2.isClover() && isExternalTouchDisplayAttached(this.getBaseContext())) {
+        config = GMC;
+      } else {
+        config = USB;
+      }
+      editor.putString(CONNECTION_MODE, config);
       editor.apply();
     } else { // (group.getCheckedRadioButtonId() == R.id.lanRadioButton)
-      String uriStr = ((TextView)findViewById(R.id.lanPayDisplayAddress)).getText().toString();
+      String uriStr = ((TextView) findViewById(R.id.lanPayDisplayAddress)).getText().toString();
       config = WS_CONFIG;
       uri = parseValidateAndStoreURI(uriStr);
     }
     connect(uri, config, clearToken);
   }
 
+  public static boolean isExternalTouchDisplayAttached(Context context) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      return false;
+    }
+
+    DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+    Display[] displays = displayManager.getDisplays();
+    if (displays.length > 1) {
+      int numTouchScreens = 0;
+      InputManager inputManager = (InputManager) context.getSystemService(Context.INPUT_SERVICE);
+      int[] inputIds = inputManager.getInputDeviceIds();
+      for (int inputId : inputIds) {
+        InputDevice inputDevice = inputManager.getInputDevice(inputId);
+        if ((inputDevice.getSources() & InputDevice.SOURCE_TOUCHSCREEN) != 0) {
+          numTouchScreens++;
+          if (numTouchScreens > 1) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   private void connect(URI uri, String config, boolean clearToken) {
     Intent intent = new Intent();
     intent.setClass(this, ExamplePOSActivity.class);
 
-    if(config.equals("USB") || (config.equals(WS_CONFIG) && uri != null)) {
+    if (config.equals("USB") || config.equals("GMC") || (config.equals(WS_CONFIG) && uri != null)) {
       intent.putExtra(ExamplePOSActivity.EXTRA_CLOVER_CONNECTOR_CONFIG, config);
       intent.putExtra(ExamplePOSActivity.EXTRA_CLEAR_TOKEN, clearToken);
       intent.putExtra(ExamplePOSActivity.EXTRA_WS_ENDPOINT, uri);
@@ -218,8 +256,8 @@ public class StartupActivity extends Activity {
       editor.putString(CONNECTION_MODE, LAN);
       editor.apply();
       return uri;
-    } catch(URISyntaxException e) {
-      Log.e(TAG, "Invalid URL" ,e);
+    } catch (URISyntaxException e) {
+      Log.e(TAG, "Invalid URL", e);
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle("Error");
       builder.setMessage("Invalid URL");
@@ -238,8 +276,12 @@ public class StartupActivity extends Activity {
           Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
           connect(parseValidateAndStoreURI(barcode.displayValue), WS_CONFIG, false);
         }
-      } else Log.e(TAG, String.format(getString(R.string.barcode_error_format),
-          CommonStatusCodes.getStatusCodeString(resultCode)));
-    } else super.onActivityResult(requestCode, resultCode, data);
+      } else {
+        Log.e(TAG, String.format(getString(R.string.barcode_error_format),
+            CommonStatusCodes.getStatusCodeString(resultCode)));
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+    }
   }
 }

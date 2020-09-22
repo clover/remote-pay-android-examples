@@ -19,7 +19,7 @@ package com.clover.remote.client.lib.example;
 import com.clover.remote.client.lib.example.utils.CurrencyUtils;
 
 import android.app.Activity;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.fragment.app.FragmentManager;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -117,7 +118,9 @@ public class RefundPaymentFragment extends DialogFragment {
       }
     }
     else{
-      ((ExamplePOSActivity)getActivity()).showPopupMessage(null, new String []{"Amount must be less than total amount and greater than $0.00"}, false);
+      PopupMessageFragment popupMessageFragment = PopupMessageFragment.newInstance(null, new String []{"Amount must be less than total amount and greater than $0.00"}, false);
+      FragmentManager fm = popupMessageFragment.getFragmentManager();
+      popupMessageFragment.show(fm, "fragment_popup_message");
     }
   }
 

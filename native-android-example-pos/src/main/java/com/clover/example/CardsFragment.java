@@ -69,6 +69,7 @@ public class CardsFragment extends Fragment implements EnterCustomerNameFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override

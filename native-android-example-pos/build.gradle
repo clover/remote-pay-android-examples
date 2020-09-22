@@ -1,34 +1,30 @@
-group = 'com.clover.sdk'
-version = '2.0.0'
-
 apply plugin: 'com.android.application'
+apply from: file("${projectDir}/../versions.gradle")
 
+group = 'com.clover.sdk'
+version = "${REMOTE_PAY_ANDROID_EXAMPLES_VERSION}"
 
 android {
-  compileSdkVersion 21
-  buildToolsVersion '27.0.3'
+  compileSdkVersion COMPILE_SDK_VERSION
 
   lintOptions {
     abortOnError false
   }
 
   defaultConfig {
+    multiDexEnabled true
     minSdkVersion 17
-    //noinspection ExpiredTargetSdkVersion
     targetSdkVersion 17
   }
-
-  android {
-    compileOptions {
-      sourceCompatibility 1.8
-      targetCompatibility 1.8
-    }
-  }
-
   android {
     lintOptions {
       abortOnError false
     }
+  }
+
+  compileOptions {
+    sourceCompatibility 1.8
+    targetCompatibility 1.8
   }
 
   packagingOptions {
@@ -38,9 +34,13 @@ android {
 }
 
 dependencies {
-  // Use local project dependency in dev
-  implementation 'com.clover.sdk:clover-android-connector-sdk:248.4'
-  implementation 'org.java-websocket:Java-WebSocket:1.3.0'
-  implementation 'com.android.support:support-v4:21.0.0'
-  implementation 'com.google.code.gson:gson:2.8.0'
+    // Use local project dependency in dev
+    implementation "androidx.multidex:multidex:${ANDROIDX_MULTIDEX_VERSION}"
+    implementation "androidx.legacy:legacy-support-v4:${ANDROIDX_LEGACY_SUPPORT_V4_VERSION}"
+    implementation "org.java-websocket:Java-WebSocket:${JAVA_WEB_SOCKET_VERSION}"
+    implementation "com.clover:clover-remote-interface:${CLOVER_COMMON_VERSION}"
+    implementation "com.clover.sdk:remote-pay-android-connector:${REMOTE_PAY_ANDROID_VERSION}"
+    implementation "com.google.code.gson:gson:${GSON_VERSION}"
+    implementation "com.google.android.gms:play-services-vision:${GOOGLE_PLAY_SERVICES_VISION_VERSION}"
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }

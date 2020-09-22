@@ -1,19 +1,28 @@
 apply plugin: 'com.android.application'
+apply from: file("${projectDir}/../versions.gradle")
+
+group = 'com.clover.sdk'
+version = "${REMOTE_PAY_ANDROID_EXAMPLES_VERSION}"
 
 android {
-  compileSdkVersion 21
-  buildToolsVersion '27.0.3'
+  compileSdkVersion COMPILE_SDK_VERSION
   lintOptions {
     abortOnError false
   }
+
+  compileOptions {
+    sourceCompatibility 1.8
+    targetCompatibility 1.8
+  }
+
   defaultConfig {
+    multiDexEnabled true
     applicationId "com.example.clover.myapplication"
     minSdkVersion 17
-    //noinspection ExpiredTargetSdkVersion
     targetSdkVersion 17
     versionCode 1
     versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
   lintOptions {
     abortOnError false
@@ -36,10 +45,14 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+  androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-  implementation 'com.clover.sdk:remote-pay-android-connector:3.0.0'
-  testImplementation 'junit:junit:4.12'
+  implementation "androidx.constraintlayout:constraintlayout:$ANDROIDX_CONSTRAINTLAYOUT_VERSION"
+  implementation "com.clover:clover-remote-interface:${CLOVER_COMMON_VERSION}"
+  implementation "com.clover.sdk:remote-pay-android-connector:${REMOTE_PAY_ANDROID_VERSION}"
+
+  androidTestImplementation "androidx.test.ext:junit:$ANDROIDX_EXT_JUNIT_VERSION"
+
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 }

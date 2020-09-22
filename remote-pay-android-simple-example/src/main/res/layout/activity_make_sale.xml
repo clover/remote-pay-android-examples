@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context="com.example.clover.remotepayandroidsimpleexample.MakeSaleActivity">
 
+
   <TextView
       android:id="@+id/make_sale_text"
       android:layout_width="wrap_content"
@@ -16,5 +17,7 @@
       android:layout_gravity="center"
       android:text="@string/make_sale"
       android:padding="10sp"/>
+
+
 
 </LinearLayout>

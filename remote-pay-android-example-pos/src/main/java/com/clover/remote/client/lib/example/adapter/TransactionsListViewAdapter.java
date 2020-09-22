@@ -80,12 +80,16 @@ public class TransactionsListViewAdapter extends ArrayAdapter<POSTransaction> {
       paymentId.setText(transaction.getId());
       paymentId.setVisibility(View.VISIBLE);
       if(transaction instanceof  POSPayment) {
-        total.setText(CurrencyUtils.convertToString(transaction.getAmount() + ((POSPayment) transaction).getTipAmount()));
+        total.setText(CurrencyUtils.convertToString(((POSPayment) transaction).getAmountWithAdditionalChargesAndTip()));
       }
       else{
         total.setText(CurrencyUtils.convertToString(transaction.getAmount()));
       }
-      tenderImage.setImageResource(ImageUtil.getCardTypeImage(transaction.getCardType()));
+      if (transaction.getCardType() != null) {
+        tenderImage.setImageResource(ImageUtil.getCardTypeImage(transaction.getCardType()));
+      } else {
+        tenderImage.setImageResource(ImageUtil.getTenderTypeImage(transaction.getTender()));
+      }
       tender.setText(transaction.getTender());
       cardDetails.setText(transaction.getCardDetails());
       employee.setText(transaction.getEmployee());
@@ -99,7 +103,7 @@ public class TransactionsListViewAdapter extends ArrayAdapter<POSTransaction> {
       if(transaction instanceof POSPayment){
         if(((POSPayment)transaction).getPaymentStatus() == POSPayment.Status.VOIDED){
           paymentType.setText("Voided");
-          total.setText("("+CurrencyUtils.convertToString(transaction.getAmount())+")");
+          total.setText("("+CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip())+")");
           total.setTextColor(v.getResources().getColor(R.color.red_text));
           paymentId.setVisibility(View.GONE);
           v.setAlpha((float).4);
@@ -112,7 +116,7 @@ public class TransactionsListViewAdapter extends ArrayAdapter<POSTransaction> {
         }
       }
       if(transaction.getRefund()){
-        total.setText("-"+CurrencyUtils.convertToString(transaction.getAmount()));
+        total.setText("-"+CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
         total.setTextColor(v.getResources().getColor(R.color.red_text));
       }
     }

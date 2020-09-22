@@ -238,6 +238,13 @@
           </LinearLayout>
         </LinearLayout>
       </LinearLayout>
+      <Button
+          android:id="@+id/setTipSuggestionsButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/set_tip_suggestions"
+          android:layout_marginStart="50dp"
+          android:background="@drawable/button_border_padding"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"

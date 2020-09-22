@@ -320,14 +320,29 @@
       </LinearLayout>
     </LinearLayout>
   </LinearLayout>
-  <Button
-      android:id="@+id/continueButton"
-      android:layout_width="wrap_content"
+  <LinearLayout
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/_continue"
-      android:layout_marginEnd="40dp"
-      android:layout_marginBottom="10dp"
-      android:background="@drawable/button_border_padding"
-      android:layout_gravity="right|bottom"/>
+      android:orientation="horizontal">
+    <Button
+        android:id="@+id/setTipSuggestionsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_tip_suggestions"
+        android:background="@drawable/button_border_padding"
+        android:layout_gravity="left"/>
+    <View android:layout_width="0dp"
+          android:layout_weight="1"
+          android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_continue"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_border_padding"
+        android:layout_gravity="right"/>
+  </LinearLayout>
 </LinearLayout>
 
