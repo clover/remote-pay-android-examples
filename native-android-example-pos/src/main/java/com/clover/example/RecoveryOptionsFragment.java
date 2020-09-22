@@ -16,6 +16,7 @@
 
 package com.clover.example;
 
+import androidx.annotation.Nullable;
 import com.clover.example.model.POSCard;
 import com.clover.example.model.POSOrder;
 import com.clover.example.model.POSStore;
@@ -53,6 +54,12 @@ public class RecoveryOptionsFragment extends Fragment implements EnterPaymentIdF
 
   public RecoveryOptionsFragment(){
 
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
 
   @Override

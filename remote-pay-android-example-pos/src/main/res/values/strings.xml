@@ -21,11 +21,15 @@
   <string name="action_settings">Settings</string>
   <string name="activity_message_payload">{&quot;Question&quot;:&quot;Why did the Storm Trooper buy an iPhone?&quot;}</string>
   <string name="add_tip">Add Tip</string>
+  <string name="increase_amount">Increase Amount</string>
   <string name="address">start service to see listen address</string>
   <string name="adjust_tip_amount">Adjust Tip Amount:</string>
+  <string name="increment_auth_amount">Increase Amount:</string>
+  <string name="increments_view_title">Payment Increases</string>
   <string name="allow_offline_payments">Allow Offline Payments</string>
   <string name="amount">Amount:</string>
   <string name="amount_amount_here">Amount: Amount Here</string>
+  <string name="best_service_ever">Best Service Ever!</string>
   <string name="app_name">Clover Example POS</string>
   <string name="auth">Auth</string>
   <string name="automatically_confirm_payment_challenges">Automatically Confirm Payment Challenges</string>
@@ -77,6 +81,8 @@
   <string name="force_offline_payment">Force Offline Payment</string>
   <string name="get_device_status">Get Device Status</string>
   <string name="get_device_status_resend">Get Device Status (Resend)</string>
+  <string name="good">Good</string>
+  <string name="great">Great</string>
   <string name="hello_message">Hello Message!</string>
   <string name="header_title">Configuration</string>
   <string name="header_summary">Configure the adapter protocol and port.</string>
@@ -107,6 +113,8 @@
   <string name="non_blocking">Non-Blocking</string>
   <string name="offline_payments">Offline Payments</string>
   <string name="receipts">Receipts</string>
+  <string name="increments">View Increments</string>
+  <string name="original_auth">Original Transaction</string>
   <string name="ok">Ok</string>
   <string name="one">1</string>
   <string name="open_cash_drawer">Open Cash Drawer</string>
@@ -157,10 +165,12 @@
   <string name="sale_settings">Sale Settings</string>
   <string name="sale_tip_amount">Sale Tip Amount</string>
   <string name="save">Save</string>
+  <string name="increase">Increase</string>
   <string name="scan_qr_code">Scan QRCode</string>
   <string name="send_initial_payload_to_activity">Send Initial Payload to Activity:</string>
   <string name="send_message">Send Message</string>
   <string name="send_payload">Send Payload</string>
+  <string name="set_tip_suggestions">Set Tip Suggestions</string>
   <string name="show_message">Show Message</string>
   <string name="show_thank_you">Show Thank You</string>
   <string name="show_welcome_message">Show Welcome Message</string>
@@ -179,6 +189,7 @@
   <string name="test_custom_activity">Test Custom Activity</string>
   <string name="test_your_own_custom_activity">Test your own Custom Activity</string>
   <string name="_tip">Tip</string>
+  <string name="_fees">Additional Charges</string>
   <string name="tip">Tip:</string>
   <string name="tips">Tips</string>
   <string name="tip_adjust">Tip Adjust</string>
@@ -203,8 +214,9 @@
   <string name="vaulted_cards_associated_w_customers">Vaulted Cards Associated w/ Customers</string>
   <string name="_void">Void</string>
   <string name="void_payment">Void Payment</string>
-  <string name="void_refund">Void Refund\n(Canada Only)</string>
+  <string name="void_refund">Void Refund</string>
   <string name="would_you_like_to_provide_a_tip">Would you like to provide a tip?</string>
+  <string name="wow">Wow!</string>
   <string name="x">X</string>
   <string name="yes">Yes</string>
   <string name="id">Id:</string>
@@ -219,6 +231,10 @@
   <string name="view_orders">View Orders</string>
   <string name="customers_vault_card">Customers (Vault Card)</string>
   <string name="_0_dollars">$0.00</string>
+  <string name="_15">15</string>
+  <string name="_18">18</string>
+  <string name="_20">20</string>
+  <string name="_30">30</string>
   <string name="reset">Reset</string>
   <string name="payment_by_id">Payment by ID</string>
   <string name="pending_payments">Pending Payments</string>
@@ -238,5 +254,7 @@
 
   <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="request_signature">Request Signature</string>
+  <string name="request_tip">Request Tip</string>
 
 </resources>

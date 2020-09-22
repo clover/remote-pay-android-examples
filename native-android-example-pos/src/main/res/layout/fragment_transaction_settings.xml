@@ -194,6 +194,7 @@
           </LinearLayout>
         </LinearLayout>
       </LinearLayout>
+
       <LinearLayout
           android:id="@+id/Tips"
           style="@style/TransactionsSectionFlex">
@@ -245,6 +246,13 @@
           </LinearLayout>
         </LinearLayout>
       </LinearLayout>
+      <Button
+          android:id="@+id/setTipSuggestionsButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/set_tip_suggestions"
+          android:background="@drawable/button_border_padding"/>
+
       <LinearLayout
           style="@style/TransactionsSectionFlex">
         <TextView

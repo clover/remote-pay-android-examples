@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="300dp"
+    android:minHeight="100dp"
+    android:orientation="vertical"
+    tools:context=".IncrementListFragment">
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/incrementsRecyclerView"
+      android:layout_weight="1"/>
+
+  <Button
+    android:id="@+id/DoneButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_border_padding"
+    android:text="@string/ok"/>
+</LinearLayout>

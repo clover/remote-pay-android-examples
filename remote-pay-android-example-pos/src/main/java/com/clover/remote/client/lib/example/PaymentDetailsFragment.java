@@ -16,21 +16,28 @@
 
 package com.clover.remote.client.lib.example;
 
+import com.clover.remote.PendingPaymentEntry;
 import com.clover.remote.client.ICloverConnector;
+import com.clover.remote.client.lib.example.model.POSAdditionalChargeAmount;
+import com.clover.remote.client.lib.example.model.POSCard;
 import com.clover.remote.client.lib.example.model.POSOrder;
 import com.clover.remote.client.lib.example.model.POSPayment;
 import com.clover.remote.client.lib.example.model.POSRefund;
 import com.clover.remote.client.lib.example.model.POSStore;
 import com.clover.remote.client.lib.example.model.POSTransaction;
+import com.clover.remote.client.lib.example.model.StoreObserver;
 import com.clover.remote.client.lib.example.utils.CurrencyUtils;
 import com.clover.remote.client.messages.DisplayReceiptOptionsRequest;
+import com.clover.remote.client.messages.IncrementPreauthRequest;
 import com.clover.remote.client.messages.RefundPaymentRequest;
 import com.clover.remote.client.messages.TipAdjustAuthRequest;
 import com.clover.remote.client.messages.VoidPaymentRefundRequest;
 import com.clover.remote.client.messages.VoidPaymentRequest;
+import com.clover.sdk.v3.payments.CardTransactionState;
+import com.clover.sdk.v3.payments.CardTransactionType;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,20 +51,22 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
-public class PaymentDetailsFragment extends Fragment implements AdjustTipFragment.AdjustTipFragmentListener, RefundPaymentFragment.PaymentRefundListener{
+public class PaymentDetailsFragment extends Fragment implements AdjustTipFragment.AdjustTipFragmentListener, RefundPaymentFragment.PaymentRefundListener, IncrementAuthorizationFragment.IncrementAuthorizationListener {
   private static final String TAG = PaymentDetailsFragment.class.getSimpleName();
   private View view;
   private TextView title, transactionTitle, date, total, paymentStatus, refundStatus, tender, cardDetails, employee, deviceId, paymentId, entryMethod, transactionType,
-      transactionState, absoluteTotal, tip, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
-  private LinearLayout tipRow, refundRow, paymentSuccessfulRow;
+      transactionState, absoluteTotal, tip, fees, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
+  private LinearLayout tipRow, feesRow, refundRow, paymentSuccessfulRow;
   private ImageView paymentStatusImage, refundStatusImage;
-  private Button refund, voidPayment, addTip, receiptSale, receiptRefund;
+  private Button refund, voidPayment, addTip, receiptSale, receiptRefund, increaseAuth, viewIncrements;
   private POSTransaction transaction;
   private POSStore store;
   private WeakReference<ICloverConnector> cloverConnectorWeakReference;
   private SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a");
   private DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+  private StoreObserver mStoreObserver;
 
   public static PaymentDetailsFragment newInstance(POSTransaction transaction, ICloverConnector cloverConnector, POSStore store) {
     PaymentDetailsFragment fragment = new PaymentDetailsFragment();
@@ -103,6 +112,8 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     absoluteTotal = (TextView) view.findViewById(R.id.PaymentDetailsAbsoluteTotal);
     tipRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsTipRow);
     tip = (TextView) view.findViewById(R.id.PaymentDetailsTip);
+    feesRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsFeesRow);
+    fees = (TextView) view.findViewById(R.id.PaymentDetailsFees);
     refundRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsRefundRow);
     paymentSuccessfulRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsPaymentSuccessfulRow);
     refundTotal = (TextView) view.findViewById(R.id.PaymentDetailsRefundTotal);
@@ -112,7 +123,21 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refundId = (TextView) view.findViewById(R.id.PaymentDetailsRefundId);
     refundDate = (TextView) view.findViewById(R.id.PaymentDetailsRefundDate);
     populateFields();
+
+    //listen for changes to the transaction that this fragment is displaying
+    mStoreObserver = new PaymentDetailsStoreObserver();
+    store.addStoreObserver(mStoreObserver);
+
     return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+
+    if (mStoreObserver != null) {
+      store.removeStoreObserver(mStoreObserver);
+    }
   }
 
   private void populateFields(){
@@ -120,7 +145,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     refund.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (refund.getText().equals("Void Refund")) {
+        if (((POSPayment) transaction).getRefundId() != null) {
           voidPaymentRefund();
         } else {
           showRefundPaymentDialog();
@@ -141,6 +166,23 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
         showAdjustTipDialog();
       }
     });
+    increaseAuth = view.findViewById(R.id.PaymentDetailsIncrementAuth);
+    increaseAuth.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        showIncrementAuthDialog();
+      }
+    });
+
+    viewIncrements = view.findViewById(R.id.viewIncrementsButton);
+    viewIncrements.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        FragmentManager fm = getFragmentManager();
+        IncrementListFragment fragment = IncrementListFragment.newInstance(transaction);
+        fragment.show(fm, fragment.DEFAULT_FRAGMENT_TAG);
+      }
+    });
 
     transactionTitle.setText(transaction.getTransactionTitle());
     date.setText(dateFormat.format(transaction.getDate())+" • "+timeFormat.format(transaction.getDate()));
@@ -154,6 +196,28 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     enableView(refund);
     enableView(addTip);
     enableView(voidPayment);
+
+    //conditionally show/hide the Increase Amount button for pre-auths
+    if (transaction.getTransactionType() == CardTransactionType.PREAUTH &&
+        transaction.getTransactionState() != CardTransactionState.CLOSED) {
+      enableView(increaseAuth);
+      increaseAuth.setVisibility(View.VISIBLE);
+    } else {
+      disableView(increaseAuth);
+      increaseAuth.setVisibility(View.INVISIBLE);
+    }
+
+    //conditionally show/hide the View Increments button for pre-auths
+    if (transaction.getTransactionType() == CardTransactionType.PREAUTH &&
+        transaction.getIncrements() != null &&
+        !transaction.getIncrements().isEmpty()) {
+      viewIncrements.setVisibility(View.VISIBLE);
+      enableView(viewIncrements);
+    } else {
+      viewIncrements.setVisibility(View.INVISIBLE);
+      disableView(viewIncrements);
+    }
+
     if(transaction.getTransactionType() != null) {
       transactionType.setText(transaction.getTransactionType().toString());
     }
@@ -182,6 +246,18 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
         addTip.setText("Adjust Tip");
         tipRow.setVisibility(View.VISIBLE);
         tip.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getTipAmount()));
+      } else {
+        tipRow.setVisibility(View.GONE);
+      }
+      if ((((POSPayment) transaction).getAdditionalCharges() != null) && (((POSPayment) transaction).getAdditionalCharges().size() != 0)) {
+        feesRow.setVisibility(View.VISIBLE);
+        long additionalCharges = 0;
+        for (POSAdditionalChargeAmount additionalChargeAmount : ((POSPayment) transaction).getAdditionalCharges()) {
+          additionalCharges += additionalChargeAmount.getAmount();
+        }
+        fees.setText(CurrencyUtils.convertToString(additionalCharges));
+      } else {
+        feesRow.setVisibility(View.GONE);
       }
       if(((POSPayment)transaction).getPaymentStatus() == POSPayment.Status.VOIDED){
         disableView(refund);
@@ -208,15 +284,16 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
           }
         });
       }
-      absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount()+((POSPayment)transaction).getTipAmount()));
+      absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
     }
     else{
       title.setText("Manual Refund Details");
-      absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount()));
+      absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalCharges()));
       disableView(refund);
       disableView(voidPayment);
       disableView(addTip);
       tipRow.setVisibility(View.GONE);
+      feesRow.setVisibility(View.GONE);
       refundRow.setVisibility(View.GONE);
       paymentSuccessfulRow.setVisibility(View.GONE);
     }
@@ -237,6 +314,21 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     AdjustTipFragment adjustTipFragment = AdjustTipFragment.newInstance(((POSPayment)transaction).getTipAmount());
     adjustTipFragment.addListener(this);
     adjustTipFragment.show(fm, "fragment_enter_payment_id");
+  }
+
+  private void showIncrementAuthDialog() {
+    FragmentManager fm = getFragmentManager();
+    IncrementAuthorizationFragment incAuthFragment = IncrementAuthorizationFragment.newInstance(this);
+    incAuthFragment.show(fm, "fragment_increment_authorization");
+  }
+
+  //Increment Authorization Listener
+  @Override
+  public void onIncrementAuthorization(long incrementAmount) {
+    IncrementPreauthRequest ipa = new IncrementPreauthRequest();
+    ipa.setAmount(incrementAmount);
+    ipa.setPaymentId(transaction.getId());
+    getCloverConnector().incrementPreAuth(ipa);
   }
 
   public void setTransaction (POSTransaction posTransaction){
@@ -317,7 +409,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
           tipRow.setVisibility(View.VISIBLE);
           tip.setText(CurrencyUtils.convertToString(tipAmount));
           addTip.setText("Adjust Tip");
-          absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount() + ((POSPayment)transaction).getTipAmount()));
+          absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
         }
       }
     });
@@ -346,7 +438,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
 
   private void showRefundPaymentDialog(){
     FragmentManager fm = getFragmentManager();
-    RefundPaymentFragment refundPaymentFragment = RefundPaymentFragment.newInstance(transaction.getAmount());
+    RefundPaymentFragment refundPaymentFragment = RefundPaymentFragment.newInstance(((POSPayment)transaction).getAmountWithAdditionalCharges());
     refundPaymentFragment.addListener(this);
     refundPaymentFragment.show(fm, "fragment_refund_payment");
   }
@@ -377,6 +469,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     cloverConnector.refundPayment(refund);
   }
 
+  //Adjust Tip Listener
   @Override
   public void onSave(long tipAmount) {
     TipAdjustAuthRequest taar = new TipAdjustAuthRequest();
@@ -385,5 +478,49 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     taar.setTipAmount(tipAmount);
     Log.d(TAG, "TipAdjustAuthRequest: " + taar.toString());
     getCloverConnector().tipAdjustAuth(taar);
+  }
+
+  private class PaymentDetailsStoreObserver implements StoreObserver {
+    @Override
+    public void onCurrentOrderChanged(POSOrder currentOrder) {
+    }
+
+    @Override
+    public void newOrderCreated(POSOrder order, boolean userInitiated) {
+    }
+
+    @Override
+    public void cardAdded(POSCard card) {
+    }
+
+    @Override
+    public void refundAdded(POSTransaction refund) {
+    }
+
+    @Override
+    public void preAuthAdded(POSPayment payment) {
+    }
+
+    @Override
+    public void preAuthRemoved(POSPayment payment) {
+    }
+
+    @Override
+    public void pendingPaymentsRetrieved(List<PendingPaymentEntry> pendingPayments) {
+    }
+
+    @Override
+    public void transactionsChanged(List<POSTransaction> transactions) {
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          POSTransaction updatedTransaction = store.getTransactionByTransactionId(transaction.getId());
+          if (updatedTransaction != null) {
+            setTransaction(updatedTransaction);
+            populateFields();
+          }
+        }
+      });
+    }
   }
 }

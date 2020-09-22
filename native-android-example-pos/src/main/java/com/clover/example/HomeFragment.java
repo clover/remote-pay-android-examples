@@ -16,6 +16,7 @@
 
 package com.clover.example;
 
+import androidx.annotation.Nullable;
 import com.clover.sdk.v3.connector.IPaymentConnector;
 
 import android.app.Fragment;
@@ -44,6 +45,12 @@ public class HomeFragment extends Fragment{
 
   public HomeFragment(){
 
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
 
   @Override

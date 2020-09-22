@@ -40,4 +40,12 @@ public class ImageUtil {
     }
     return image;
   }
+
+  public static int getTenderTypeImage(String tender) {
+    int image = R.drawable.tender_default;
+    if(tender.equalsIgnoreCase("alipay")) {
+      image = R.drawable.tender_alipay;
+    }
+    return image;
+  }
 }

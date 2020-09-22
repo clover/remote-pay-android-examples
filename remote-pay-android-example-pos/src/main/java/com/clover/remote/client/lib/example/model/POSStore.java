@@ -19,6 +19,7 @@ package com.clover.remote.client.lib.example.model;
 import com.clover.remote.PendingPaymentEntry;
 import com.clover.remote.client.CloverConnector;
 import com.clover.remote.client.messages.TipMode;
+import com.clover.sdk.v3.merchant.TipSuggestion;
 import com.clover.sdk.v3.payments.CardTransactionType;
 import com.clover.sdk.v3.payments.DataEntryLocation;
 
@@ -69,6 +70,10 @@ public class POSStore {
   private Boolean automaticSignatureConfirmation;
   private Boolean automaticPaymentConfirmation;
   private Boolean disableRestartTransactionOnFail;
+  private TipSuggestion tipSuggestion1 = null;
+  private TipSuggestion tipSuggestion2 = null;
+  private TipSuggestion tipSuggestion3 = null;
+  private TipSuggestion tipSuggestion4 = null;
 
   public POSStore() {
     availableItems = new LinkedHashMap<String, POSItem>();
@@ -124,6 +129,8 @@ public class POSStore {
     this.storeObservers.add(storeObserver);
   }
 
+  public void removeStoreObserver(StoreObserver storeObserver) { this.storeObservers.remove(storeObserver); }
+
   public List<POSTransaction> getTransactions(){
     return this.transactions;
   }
@@ -151,9 +158,29 @@ public class POSStore {
     }
   }
 
+  /**
+   * Replace an existing transaction with a new instance of the same transaction id.
+   * @param transaction The new POSTransaction. Will update an existing transaction, if present.
+   * @return True if existing transaction was found and replaced. False if no existing transaction was found.
+   */
+  public boolean updateTransaction(POSTransaction transaction) {
+    for (int i = 0; i < this.transactions.size(); i++) {
+      if (transaction.getId().equals(this.transactions.get(i).getId())) {
+        this.transactions.set(i, transaction);
+
+        for(StoreObserver so : storeObservers){
+          so.transactionsChanged(this.transactions);
+        }
+        return true;
+      }
+    }
+
+    return false; //if we got here, no existing transaction was found.
+  }
+
   public void updateTransactionToVoided(String transactionId){
     for(POSTransaction transaction : this.transactions){
-      if(transaction.getId() == transactionId){
+      if(transaction.getId().equals(transactionId)){
         transaction.setTransactionType(CardTransactionType.VOID);
       }
     }
@@ -181,7 +208,7 @@ public class POSStore {
     POSOrder selectedOrder = null;
     for(POSOrder order : this.orders){
       for(POSTransaction payment : order.getPayments()){
-        if(payment.getId() == paymentId){
+        if(payment.getId().equals(paymentId)){
           selectedOrder = order;
         }
       }
@@ -192,7 +219,7 @@ public class POSStore {
   public POSTransaction getTransactionByTransactionId(String transactionId){
     POSTransaction selectedTransaction = null;
     for(POSTransaction transaction : this.transactions){
-      if (transaction.getId() == transactionId){
+      if (transaction.getId().equals(transactionId)){
         selectedTransaction = transaction;
       }
     }
@@ -343,6 +370,38 @@ public class POSStore {
     for(StoreObserver so : storeObservers) {
       so.pendingPaymentsRetrieved(pendingPayments);
     }
+  }
+
+  public TipSuggestion getTipSuggestion1() {
+    return tipSuggestion1;
+  }
+
+  public void setTipSuggestion1(TipSuggestion tipSuggestion1) {
+    this.tipSuggestion1 = tipSuggestion1;
+  }
+
+  public TipSuggestion getTipSuggestion2() {
+    return tipSuggestion2;
+  }
+
+  public void setTipSuggestion2(TipSuggestion tipSuggestion2) {
+    this.tipSuggestion2 = tipSuggestion2;
+  }
+
+  public TipSuggestion getTipSuggestion3() {
+    return tipSuggestion3;
+  }
+
+  public void setTipSuggestion3(TipSuggestion tipSuggestion3) {
+    this.tipSuggestion3 = tipSuggestion3;
+  }
+
+  public TipSuggestion getTipSuggestion4() {
+    return tipSuggestion4;
+  }
+
+  public void setTipSuggestion4(TipSuggestion tipSuggestion4) {
+    this.tipSuggestion4 = tipSuggestion4;
   }
 
   public Boolean getDisableRestartTransactionOnFail() {

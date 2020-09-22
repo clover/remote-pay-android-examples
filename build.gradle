@@ -6,32 +6,37 @@
 
 */
 
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        google()
 
-    }
+
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    jcenter()
+  }
 
   def mavenPlugin = "com.github.dcendents:android-maven-gradle-plugin:1.5"
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath 'com.android.tools.build:gradle:3.1.2'
     classpath mavenPlugin
-      classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
+    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
     classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.10.0'
   }
 }
 
+
+
 allprojects {
-    apply plugin: 'com.jfrog.artifactory'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.github.dcendents.android-maven'
-    repositories {
-        google()
-        jcenter()
-    }
+  apply plugin: 'com.jfrog.artifactory'
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.github.dcendents.android-maven'
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    jcenter()
+  }
 
 }
 
@@ -40,8 +45,7 @@ subprojects {
   repositories {
     mavenLocal()
     mavenCentral()
-      google()
-
+    google()
   }
 }
 

@@ -27,7 +27,8 @@ import com.clover.remote.client.lib.example.model.POSStore;
 import com.clover.remote.client.lib.example.model.POSTransaction;
 import com.clover.remote.client.lib.example.model.StoreObserver;
 
-import android.app.Fragment;
+import android.app.Activity;
+import androidx.fragment.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -116,6 +117,14 @@ public class TransactionsFragment extends Fragment {
     transactions = store.getTransactions();
 
     if(transactions != null && transactions.size() > 0) {
+      /*
+      Transactions fragment can become detached from activity, but still receive transaction updates. So
+      we want to guard against null here.
+       */
+      if (getActivity() == null) {
+        return;
+      }
+
       getActivity().runOnUiThread(new Runnable() {
         @Override
         public void run() {

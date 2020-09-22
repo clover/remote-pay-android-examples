@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:id="@+id/incrementRow">
+
+  <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transaction Title"
+            android:textSize="25sp"
+            android:id="@+id/title"
+            tools:ignore="HardcodedText"/>
+
+  <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="Test Amount"
+            android:id="@+id/amount"
+            android:gravity="right"
+            android:layout_alignBaseline="@+id/title"
+            android:layout_toEndOf="@+id/title"
+            android:layout_margin="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="30dp"
+            tools:ignore="HardcodedText"/>
+
+  <!-- Hardcoded text is suppressed because it's used for layout only.
+       These values are explicitly replaced at runtime -->
+
+</RelativeLayout>

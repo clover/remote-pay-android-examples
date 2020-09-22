@@ -117,6 +117,16 @@
     <item name="android:layout_marginBottom">10dp</item>
   </style>
 
+  <style name="TipSuggestionPercentageEditText">
+    <item name="android:layout_width">60dp</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAlignment">textEnd</item>
+    <item name="android:inputType">number</item>
+  </style>
 
+  <style name="TipSuggestionLabelEditText">
+    <item name="android:layout_width">300dp</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
 
 </resources>

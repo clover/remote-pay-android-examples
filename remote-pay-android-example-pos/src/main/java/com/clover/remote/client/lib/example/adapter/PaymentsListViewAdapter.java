@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2018 Clover Network, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,7 +88,7 @@ public class PaymentsListViewAdapter extends ArrayAdapter<POSTransaction> {
         POSPayment payment = (POSPayment) posPayment;
         statusColumn.setText(payment.getPaymentStatus() == null ? "" : "" + (payment.getPaymentStatus()));
         statusColumn.setTextColor(v.getResources().getColor(R.color.black));
-        totalColumn.setText(CurrencyUtils.format((posPayment).getAmount(), Locale.getDefault()));
+        totalColumn.setText(CurrencyUtils.format(((POSPayment)posPayment).getAmountWithAdditionalChargesAndTip(), Locale.getDefault()));
         totalColumn.setTextColor(v.getResources().getColor(R.color.black));
         if(payment.getPaymentStatus() == POSPayment.Status.VOIDED){
           v.setAlpha((float)0.4);

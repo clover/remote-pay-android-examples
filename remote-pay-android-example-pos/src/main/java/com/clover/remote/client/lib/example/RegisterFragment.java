@@ -17,8 +17,8 @@
 package com.clover.remote.client.lib.example;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -157,7 +157,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
       }
     });
 
-    final CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder));
+    final CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder));
     currentOrderFragment.setOrder(store.getCurrentOrder());
     currentOrderFragment.setStore(store);
     currentOrderFragment.addListener(this);
@@ -195,7 +195,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    CurrentOrderFragment f = (CurrentOrderFragment) getFragmentManager()
+    CurrentOrderFragment f = (CurrentOrderFragment) getChildFragmentManager()
         .findFragmentById(R.id.PendingOrder);
     if (f != null)
       getFragmentManager().beginTransaction().remove(f).commit();
@@ -283,7 +283,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   public void setVaultedCard(POSCard vaultedCard) {
     this.vaultedCard = vaultedCard;
     if (view != null) {
-      CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder));
+      CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder));
       currentOrderFragment.setOrder(store.getCurrentOrder());
       currentOrderFragment.setStore(store);
       currentOrderFragment.setVaulted(vaulted);
@@ -292,13 +292,18 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     }
   }
 
+  public void setOrder(POSOrder order) {
+    CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder));
+    currentOrderFragment.setOrder(order);
+  }
+
   public void setPreAuth (boolean value){
     preAuth = value;
     if (view != null) {
       if(preAuth) {
         showPreAuthDialog();
       }
-      CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder));
+      CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder));
       currentOrderFragment.setOrder(store.getCurrentOrder());
       currentOrderFragment.setStore(store);
       currentOrderFragment.setCloverConnector(getCloverConnector());
@@ -334,14 +339,39 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    setTipSuggestions(request);
 
     if(vaulted){
       addVaultedCardToRequest(request);
     }
 
-
     Log.d(TAG, "SaleRequest: " + request.toString());
     getCloverConnector().sale(request);
+  }
+
+  public void tipAdded(final long tipAmount) {
+    CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder));
+    currentOrderFragment.tipAdded(tipAmount);
+  }
+
+  private void setTipSuggestions(SaleRequest request){
+    TipSuggestion tipSuggestion1 = isTipNull(store.getTipSuggestion1());
+    TipSuggestion tipSuggestion2 = isTipNull(store.getTipSuggestion2());
+    TipSuggestion tipSuggestion3 = isTipNull(store.getTipSuggestion3());
+    TipSuggestion tipSuggestion4 = isTipNull(store.getTipSuggestion4());
+    if(tipSuggestion1 == null & tipSuggestion2 == null & tipSuggestion3 == null & tipSuggestion4 == null){
+      return;
+    }
+    else {
+      request.setTipSuggestions(tipSuggestion1, tipSuggestion2, tipSuggestion3, tipSuggestion4);
+    }
+  }
+
+  private TipSuggestion isTipNull(TipSuggestion tipSuggestion){
+    if(tipSuggestion == null || !tipSuggestion.getIsEnabled() || tipSuggestion.getPercentage() == null){
+      return null;
+    }
+    return tipSuggestion;
   }
 
   private void addVaultedCardToRequest(TransactionRequest request){
@@ -360,7 +390,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     clearPreAuth();
     clearVaultedCard();
     store.createOrder(true);
-    CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getFragmentManager().findFragmentById(R.id.PendingOrder);
+    CurrentOrderFragment currentOrderFragment = (CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder);
     currentOrderFragment.setOrder(store.getCurrentOrder());
   }
 

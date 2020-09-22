@@ -17,6 +17,10 @@
 <resources>
   <string name="_0">0</string>
   <string name="_0_dollars">$0.00</string>
+  <string name="_15">15</string>
+  <string name="_18">18</string>
+  <string name="_20">20</string>
+  <string name="_30">30</string>
   <string name="_50_dollars">$50.00</string>
   <string name="accept">Accept</string>
   <string name="accept_offline_no_prompt">Accept Offline w/o Prompt</string>
@@ -29,6 +33,7 @@
   <string name="amount">Amount:</string>
   <string name="amount_amount_here">Amount: Amount Here</string>
   <string name="app_name">Native Clover Example POS</string>
+  <string name="best_service_ever">Best Service Ever!</string>
   <string name="auth">Auth</string>
   <string name="automatically_confirm_payment_challenges">Automatically Confirm Payment Challenges</string>
   <string name='automatically_confirm_signature'>Automatically Confirm Signature</string>
@@ -81,6 +86,8 @@
   <string name="force_offline_payment">Force Offline Payment</string>
   <string name="get_device_status">Get Device Status</string>
   <string name="get_device_status_resend">Get Device Status (Resend)</string>
+  <string name="good">Good</string>
+  <string name="great">Great</string>
   <string name="hello_message">Hello Message!</string>
   <string name="header_title">Configuration</string>
   <string name="header_summary">Configure the adapter protocol and port.</string>
@@ -168,6 +175,7 @@
   <string name="sale_tip_amount">Sale Tip Amount</string>
   <string name="save">Save</string>
   <string name="send_message">Send Message</string>
+  <string name="set_tip_suggestions">Set Tip Suggestions</string>
   <string name="show_message">Show Message</string>
   <string name="show_thank_you">Show Thank You</string>
   <string name="show_welcome_message">Show Welcome Message</string>
@@ -182,6 +190,7 @@
   <string name="tender">Tender:</string>
   <string name="test">Test</string>
   <string name="_tip">Tip</string>
+  <string name="_fees">Additional Charges</string>
   <string name="tip">Tip:</string>
   <string name="tip_adjust">Tip Adjust</string>
   <string name="tip_mode">Tip Mode</string>
@@ -209,6 +218,7 @@
   <string name="_void">Void</string>
   <string name="void_payment">Void Payment</string>
   <string name="would_you_like_to_tip">Would you like to provide a tip?</string>
+  <string name="wow">Wow!</string>
   <string name="x">X</string>
   <string name="yes">Yes</string>
 

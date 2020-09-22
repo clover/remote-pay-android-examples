@@ -17,6 +17,7 @@
 package com.clover.example.model;
 
 import com.clover.sdk.v3.base.PendingPaymentEntry;
+import com.clover.sdk.v3.merchant.TipSuggestion;
 import com.clover.sdk.v3.payments.CardTransactionType;
 import com.clover.sdk.v3.payments.DataEntryLocation;
 import java.io.Serializable;
@@ -71,6 +72,10 @@ public class POSStore implements Serializable{
   private Boolean automaticPaymentConfirmation;
   private Boolean disableRestartTransactionOnFail;
   private List<PendingPaymentEntry> pendingPayments;
+  private TipSuggestion tipSuggestion1 = null;
+  private TipSuggestion tipSuggestion2 = null;
+  private TipSuggestion tipSuggestion3 = null;
+  private TipSuggestion tipSuggestion4 = null;
 
 
   public POSStore() {
@@ -314,6 +319,38 @@ public class POSStore implements Serializable{
     for(StoreObserver so : storeObservers) {
       so.pendingPaymentsRetrieved(pendingPayments);
     }
+  }
+
+  public TipSuggestion getTipSuggestion1() {
+    return tipSuggestion1;
+  }
+
+  public void setTipSuggestion1(TipSuggestion tipSuggestion1) {
+    this.tipSuggestion1 = tipSuggestion1;
+  }
+
+  public TipSuggestion getTipSuggestion2() {
+    return tipSuggestion2;
+  }
+
+  public void setTipSuggestion2(TipSuggestion tipSuggestion2) {
+    this.tipSuggestion2 = tipSuggestion2;
+  }
+
+  public TipSuggestion getTipSuggestion3() {
+    return tipSuggestion3;
+  }
+
+  public void setTipSuggestion3(TipSuggestion tipSuggestion3) {
+    this.tipSuggestion3 = tipSuggestion3;
+  }
+
+  public TipSuggestion getTipSuggestion4() {
+    return tipSuggestion4;
+  }
+
+  public void setTipSuggestion4(TipSuggestion tipSuggestion4) {
+    this.tipSuggestion4 = tipSuggestion4;
   }
 
   public Boolean getDisableRestartTransactionOnFail() {

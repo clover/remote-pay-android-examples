@@ -18,7 +18,7 @@ package com.clover.remote.client.lib.example;
 
 import com.clover.remote.client.ICloverConnector;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;

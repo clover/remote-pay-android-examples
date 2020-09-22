@@ -16,6 +16,7 @@
 
 package com.clover.example;
 
+import com.clover.example.model.POSAdditionalChargeAmount;
 import com.clover.example.model.POSOrder;
 import com.clover.example.model.POSPayment;
 import com.clover.example.model.POSRefund;
@@ -45,8 +46,8 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
   private static final String TAG = PaymentDetailsFragment.class.getSimpleName();
   private View view;
   private TextView title, transactionTitle, date, total, paymentStatus, tender, cardDetails, employee, deviceId, paymentId, entryMethod,
-      transactionState, transactionType, absoluteTotal, tip, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
-  private LinearLayout tipRow, refundRow, paymentSuccessfulRow;
+      transactionState, transactionType, absoluteTotal, tip, fees, refundDate, refundTotal, refundTender, refundEmployee, refundDevice, refundId;
+  private LinearLayout tipRow, feesRow, refundRow, paymentSuccessfulRow;
   private ImageView paymentStatusImage;
   private Button refund, voidPayment, addTip;
   private POSTransaction transaction;
@@ -72,6 +73,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
 
   @Override
@@ -97,6 +99,8 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     absoluteTotal = (TextView) view.findViewById(R.id.PaymentDetailsAbsoluteTotal);
     tipRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsTipRow);
     tip = (TextView) view.findViewById(R.id.PaymentDetailsTip);
+    feesRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsFeesRow);
+    fees = (TextView) view.findViewById(R.id.PaymentDetailsFees);
     refundRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsRefundRow);
     paymentSuccessfulRow = (LinearLayout) view.findViewById(R.id.PaymentDetailsPaymentSuccessfulRow);
     refundTotal = (TextView) view.findViewById(R.id.PaymentDetailsRefundTotal);
@@ -140,7 +144,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
 
     transactionTitle.setText(transaction.getTransactionTitle());
     date.setText(dateFormat.format(transaction.getDate())+" • "+timeFormat.format(transaction.getDate()));
-    total.setText(CurrencyUtils.convertToString(transaction.getAmount()));
+    total.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmount()));
     tender.setText(transaction.getTender());
     cardDetails.setText(transaction.getCardDetails());
     employee.setText(transaction.getEmployee());
@@ -172,6 +176,16 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
         tipRow.setVisibility(View.GONE);
         tip.setText("");
       }
+      if ((((POSPayment) transaction).getAdditionalCharges() != null) && (((POSPayment) transaction).getAdditionalCharges().size() != 0)) {
+        feesRow.setVisibility(View.VISIBLE);
+        long additionalCharges = 0;
+        for (POSAdditionalChargeAmount additionalChargeAmount : ((POSPayment) transaction).getAdditionalCharges()) {
+          additionalCharges += additionalChargeAmount.getAmount();
+        }
+        fees.setText(CurrencyUtils.convertToString(additionalCharges));
+      } else {
+        feesRow.setVisibility(View.GONE);
+      }
       if (((POSPayment) transaction).getPaymentStatus() == POSPayment.Status.VOIDED) {
         disableView(refund);
         disableView(addTip);
@@ -179,20 +193,21 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
         transactionType.setText("VOIDED");
       }
       if (((POSPayment) transaction).getRefundId() != null) {
-        addRefund(transaction, transaction.getAmount());
+        addRefund(transaction, ((POSPayment)transaction).getAmountWithAdditionalChargesAndTip());
       }
       else{
         refundRow.setVisibility(View.GONE);
       }
-      absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount()+((POSPayment)transaction).getTipAmount()));
+      absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
     }
     else{
       title.setText("Manual Refund Details");
-      absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount()));
+      absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
       disableView(refund);
       disableView(voidPayment);
       disableView(addTip);
       tipRow.setVisibility(View.GONE);
+      feesRow.setVisibility(View.GONE);
       refundRow.setVisibility(View.GONE);
       paymentSuccessfulRow.setVisibility(View.GONE);
 
@@ -265,7 +280,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
           tipRow.setVisibility(View.VISIBLE);
           tip.setText(CurrencyUtils.convertToString(tipAmount));
           addTip.setText("Adjust Tip");
-          absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount() + ((POSPayment)transaction).getTipAmount()));
+          absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
         }
       }
     });
@@ -297,7 +312,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
 
   private void showRefundPaymentDialog(){
     FragmentManager fm = getFragmentManager();
-    RefundPaymentFragment refundPaymentFragment = RefundPaymentFragment.newInstance(transaction.getAmount());
+    RefundPaymentFragment refundPaymentFragment = RefundPaymentFragment.newInstance(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip());
     refundPaymentFragment.addListener(this);
     refundPaymentFragment.show(fm, "fragment_refund_payment");
   }

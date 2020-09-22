@@ -8,7 +8,7 @@ import com.clover.remote.client.messages.MessageToActivity;
 import com.clover.remote.message.ByteArrayToBase64TypeAdapter;
 import com.clover.remote.message.CloverJSONifiableTypeAdapter;
 import com.clover.sdk.JSONifiable;
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;

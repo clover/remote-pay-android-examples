@@ -69,6 +69,7 @@
               android:layout_height="wrap_content"
               android:textSize="20sp"
               android:layout_marginEnd="20dp"/>
+
           <Button
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -79,7 +80,7 @@
               android:background="@android:color/transparent"
               android:textColor="@color/blue_text_40"
               android:gravity="right"
-              />
+              android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/PaymentDetailsPaymentSuccessfulRow"
@@ -100,6 +101,12 @@
               android:textSize="16sp"
               android:text="@string/payment_successful"/>
         </LinearLayout>
+      <LinearLayout
+          android:id="@+id/PaymentDetailsPaymentRow"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:orientation="horizontal">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -183,6 +190,21 @@
               android:layout_toEndOf="@id/TransactionStateLabel"
               android:layout_below="@id/PaymentDetailsTransactionType"/>
         </RelativeLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:gravity="right"
+            android:id="@+id/viewIncrementsButton"
+            android:text="@string/increments"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_text_40"
+            />
+      </LinearLayout>
         <LinearLayout
             android:id="@+id/PaymentDetailsTipRow"
             android:layout_width="match_parent"
@@ -214,6 +236,38 @@
                 android:textSize="20sp"
                 android:gravity="right"/>
           </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/PaymentDetailsFeesRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/black"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="@string/_fees"/>
+                <TextView
+                    android:id="@+id/PaymentDetailsFees"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:gravity="right"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/PaymentDetailsRefundRow"
@@ -347,6 +401,7 @@
               android:textSize="20sp"
               android:gravity="right"/>
         </LinearLayout>
+
       </LinearLayout>
     </ScrollView>
     <LinearLayout
@@ -369,8 +424,14 @@
           android:id="@+id/PaymentDetailsAddTip"
           style="@style/PaymentDetailsButton"
           android:background="@drawable/button_border_padding"
-          android:visibility="gone"
+          android:visibility="invisible"
           android:text="@string/add_tip"/>
+      <Button
+          android:id="@+id/PaymentDetailsIncrementAuth"
+          style="@style/PaymentDetailsButton"
+          android:background="@drawable/button_border_padding"
+          android:visibility="invisible"
+          android:text="@string/increase_amount"/>
     </LinearLayout>
   </LinearLayout>
 </LinearLayout>

@@ -16,17 +16,18 @@
 
 package com.clover.remote.client.lib.example;
 
-import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.fragment.app.FragmentTransaction;
 
 public class PopupMessageFragment extends DialogFragment {
 
@@ -82,6 +83,7 @@ public class PopupMessageFragment extends DialogFragment {
     }
     for(String line : dialogContent){
       TextView textLine = new TextView(getActivity());
+      textLine.setMovementMethod(new ScrollingMovementMethod());
       if(monospace) {
         textLine.setTypeface(Typeface.MONOSPACE);
       }

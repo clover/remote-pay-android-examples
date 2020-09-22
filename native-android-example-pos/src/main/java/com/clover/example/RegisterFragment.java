@@ -71,13 +71,13 @@ import java.util.Locale;
 import java.util.Map;
 
 public class RegisterFragment extends Fragment implements CurrentOrderFragmentListener, AvailableItemListener,
-    PreAuthDialogFragment.PreAuthDialogFragmentListener{
+        PreAuthDialogFragment.PreAuthDialogFragmentListener{
   private OnFragmentInteractionListener mListener;
   private static final String TAG = RegisterFragment.class.getSimpleName();
   private View view;
 
-  POSStore store;
-  private WeakReference<IPaymentConnector> paymentConnectorWeakReference;
+  private static POSStore store;
+  private static WeakReference<IPaymentConnector> paymentConnectorWeakReference;
   IDisplayConnector displayConnector;
   boolean preAuth = false;
   boolean vaulted = false;
@@ -131,6 +131,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
 
   @Override
@@ -234,7 +235,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     } catch (ClassCastException e) {
 
       throw new ClassCastException(activity.toString()
-                                   + " must implement OnFragmentInteractionListener: " + activity.getClass().getName());
+              + " must implement OnFragmentInteractionListener: " + activity.getClass().getName());
     }
   }
 
@@ -256,12 +257,20 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   }
 
   @Override
+  public void onPause() {
+    super.onPause();
+//    new Handler().post(new Runnable() {
+//      public void run() {
+//        CurrentOrderFragment f = (CurrentOrderFragment)getFragmentManager().findFragmentById(R.id.PendingOrder);
+//        if (f != null)
+//          getFragmentManager().beginTransaction().remove(f).commitAllowingStateLoss();
+//      }
+//    });
+  }
+
+  @Override
   public void onDestroyView() {
     super.onDestroyView();
-    CurrentOrderFragment f = (CurrentOrderFragment) getFragmentManager()
-        .findFragmentById(R.id.PendingOrder);
-    if (f != null)
-      getFragmentManager().beginTransaction().remove(f).commit();
   }
 
   @Override
@@ -383,6 +392,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     }
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    setTipSuggestions(request);
     if(vaulted){
       addVaultedCardToRequest(request);
     }
@@ -390,6 +400,32 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     Log.d(TAG, "SaleRequest: " + request.toString());
     paymentConnector.sale(request);
   }
+
+  private void setTipSuggestions(TransactionRequest request){
+    final TipSuggestion tipSuggestion1 = isTipNull(store.getTipSuggestion1());
+    final TipSuggestion tipSuggestion2 = isTipNull(store.getTipSuggestion2());
+    final TipSuggestion tipSuggestion3 = isTipNull(store.getTipSuggestion3());
+    final TipSuggestion tipSuggestion4 = isTipNull(store.getTipSuggestion4());
+    if(tipSuggestion1 == null & tipSuggestion2 == null & tipSuggestion3 == null & tipSuggestion4 == null){
+      return;
+    }
+    else{
+      List<TipSuggestion> tipSuggestions = new ArrayList<TipSuggestion>() {{
+        add(tipSuggestion1);
+        add(tipSuggestion2);
+        add(tipSuggestion3);
+        add(tipSuggestion4);
+      }};
+      request.setTipSuggestions(tipSuggestions);
+    }
+  }
+  private TipSuggestion isTipNull(TipSuggestion tipSuggestion){
+    if(tipSuggestion == null || !tipSuggestion.getIsEnabled() || tipSuggestion.getPercentage() == null){
+      return null;
+    }
+    return tipSuggestion;
+  }
+
 
   private void addVaultedCardToRequest(TransactionRequest request){
     VaultedCard vaultedC = new VaultedCard();
@@ -438,6 +474,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     if(vaulted){
       addVaultedCardToRequest(request);
     }
+    setTipSuggestions(request);
     final IPaymentConnector cloverConnector = paymentConnectorWeakReference.get();
     Log.d(TAG, "AuthRequest: " + request.toString());
     cloverConnector.auth(request);

@@ -43,20 +43,22 @@
         android:orientation="horizontal"
         android:layout_marginBottom="5dp">
       <ImageButton
-          android:layout_width="30dp"
+          android:layout_width="80dp"
           android:layout_height="30dp"
           android:layout_marginRight="20dp"
           android:src="@drawable/ic_home"
           android:background="@android:color/transparent"
-          android:scaleType="fitCenter"
+          android:scaleType="fitStart"
           android:onClick="showHome"/>
+
       <TextView
           android:id="@+id/ConnectionStatusLabel"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/disconnected"
-          android:layout_gravity="fill_horizontal|center_vertical"
-          android:layout_weight="2"/>
+          android:layout_gravity="fill_horizontal|end"
+          android:layout_weight="2"
+          android:textAlignment="viewEnd"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

@@ -20,8 +20,10 @@ import com.clover.connector.sdk.v3.PaymentConnector;
 import com.clover.example.model.POSStore;
 import com.clover.example.utils.CurrencyUtils;
 import com.clover.sdk.v3.connector.IPaymentConnector;
+import com.clover.sdk.v3.merchant.TipSuggestion;
 import com.clover.sdk.v3.payments.DataEntryLocation;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TransactionSettingsFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
+public class TransactionSettingsFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, TipSuggestionFragment.TipSuggestionListener {
 
   public enum transactionTypes {SALE, AUTH, PREAUTH}
   private transactionTypes type;
@@ -64,7 +66,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
   private Spinner tipModeSpinner, signatureEntryLocationSpinner;
   private EditText tipAmountText, signatureThresholdText;
   private LinearLayout tips;
-  private Button continueButton;
+  private Button continueButton, setTipSuggestionsButton;
   private TextView settingsLabel;
 
   public static TransactionSettingsFragment newInstance(POSStore store, transactionTypes type) {
@@ -115,6 +117,14 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
     swipeSwitch.setTag(POSStore.CARD_ENTRY_METHOD_MAG_STRIPE);
     chipSwitch.setTag(POSStore.CARD_ENTRY_METHOD_ICC_CONTACT);
     contactlessSwitch.setTag(POSStore.CARD_ENTRY_METHOD_NFC_CONTACTLESS);
+
+    setTipSuggestionsButton = (Button) view.findViewById(R.id.setTipSuggestionsButton);
+    setTipSuggestionsButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        showTipSuggestions();
+      }
+    });
 
     signatureThresholdText.setSelection(signatureThresholdText.getText().length());
     signatureThresholdText.addTextChangedListener(new TextWatcher(){
@@ -410,6 +420,13 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
     return view;
   }
 
+  private void showTipSuggestions() {
+    FragmentManager fm = getFragmentManager();
+    TipSuggestionFragment tipSuggestionFragment = TipSuggestionFragment.newInstance(store.getTipSuggestion1(), store.getTipSuggestion2(), store.getTipSuggestion3(), store.getTipSuggestion4());
+    tipSuggestionFragment.addListener(this);
+    tipSuggestionFragment.show(fm, "fragment_tip_suggestions");
+  }
+
   private int getCardEntryMethodStates() {
     int val = 0;
     val |= manualSwitch.isChecked() ? (Integer) manualSwitch.getTag() : 0;
@@ -532,6 +549,15 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
 
+  }
+
+  @Override
+  public void onSaveTipSuggestions(TipSuggestion tipSuggestion1, TipSuggestion tipSuggestion2, TipSuggestion tipSuggestion3, TipSuggestion tipSuggestion4) {
+    Log.d("TipSuggestion:", tipSuggestion1.toString());
+    store.setTipSuggestion1(tipSuggestion1);
+    store.setTipSuggestion2(tipSuggestion2);
+    store.setTipSuggestion3(tipSuggestion3);
+    store.setTipSuggestion4(tipSuggestion4);
   }
 
   public interface OnFragmentInteractionListener {

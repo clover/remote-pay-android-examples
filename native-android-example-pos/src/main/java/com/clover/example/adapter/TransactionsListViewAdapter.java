@@ -76,8 +76,12 @@ public class TransactionsListViewAdapter extends ArrayAdapter<POSTransaction> {
       paymentType.setText(transaction.getTransactionTitle());
       paymentId.setText(transaction.getId());
       paymentId.setVisibility(View.VISIBLE);
-      total.setText(CurrencyUtils.convertToString(transaction.getAmount()));
-      tenderImage.setImageResource(ImageUtil.getCardTypeImage(transaction.getCardType()));
+      total.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
+      if (transaction.getCardType() != null) {
+        tenderImage.setImageResource(ImageUtil.getCardTypeImage(transaction.getCardType()));
+      } else {
+        tenderImage.setImageResource(ImageUtil.getTenderTypeImage(transaction.getTender()));
+      }
       tender.setText(transaction.getTender());
       cardDetails.setText(transaction.getCardDetails());
       employee.setText(transaction.getEmployee());
@@ -91,7 +95,7 @@ public class TransactionsListViewAdapter extends ArrayAdapter<POSTransaction> {
       if(transaction instanceof POSPayment){
         if(((POSPayment)transaction).getPaymentStatus() == POSPayment.Status.VOIDED){
           paymentType.setText("Voided");
-          total.setText("("+CurrencyUtils.convertToString(transaction.getAmount())+")");
+          total.setText("("+CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip())+")");
           total.setTextColor(v.getResources().getColor(R.color.red_text));
           paymentId.setVisibility(View.GONE);
           v.setAlpha((float).4);
@@ -99,12 +103,12 @@ public class TransactionsListViewAdapter extends ArrayAdapter<POSTransaction> {
       }
       else if(transaction instanceof POSRefund){
         if(transaction.getTransactionTitle() == "Refund"){
-          total.setText("-"+CurrencyUtils.convertToString(transaction.getAmount())+"");
+          total.setText("-"+CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip())+"");
           total.setTextColor(v.getResources().getColor(R.color.red_text));
         }
       }
       if(transaction.getRefund()){
-        total.setText("-"+CurrencyUtils.convertToString(transaction.getAmount()));
+        total.setText("-"+CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalChargesAndTip()));
         total.setTextColor(v.getResources().getColor(R.color.red_text));
       }
   }

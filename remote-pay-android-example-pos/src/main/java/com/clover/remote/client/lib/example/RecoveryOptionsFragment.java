@@ -27,8 +27,8 @@ import com.clover.remote.client.lib.example.model.StoreObserver;
 import com.clover.remote.client.lib.example.utils.CurrencyUtils;
 import com.clover.remote.client.messages.RetrievePaymentRequest;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
