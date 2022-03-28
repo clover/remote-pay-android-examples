@@ -2,7 +2,7 @@
 // NOTE: gradle sync after modifying this file!!!
 ext {
   // Version of these examples
-  REMOTE_PAY_ANDROID_EXAMPLES_VERSION = "4.3.2"
+  REMOTE_PAY_ANDROID_EXAMPLES_VERSION = "4.3.5"
 
   // Bump compile SDK version any time a new SDK is released, it does not affect behavior
   COMPILE_SDK_VERSION = 29 // https://developer.android.com/studio/releases/platforms
@@ -19,9 +19,8 @@ ext {
   LIST_VIEW_ANIMATIONS_CORE_VERSION = "3.1.0@aar"
   LIST_VIEW_ANIMATIONS_MANIPULATION_VERSION = "3.1.0@aar"
   CLOVER_COMMON_VERSION = "290.8"
-  CLOVER_SDK_VERSION = "262.2"
   ANDROID_SUPPORT_V4_VERSION = "27.0.0"
-  REMOTE_PAY_ANDROID_VERSION = "4.3.2"
+  REMOTE_PAY_ANDROID_VERSION = "4.3.5"
   ORG_JSON_VERSION = "20190722"
   NV_WEBSOCKET_CLIENT_VERSION = "1.31"
 

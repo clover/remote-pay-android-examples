@@ -123,6 +123,28 @@ public class POSOrder {
     return tips;
   }
 
+  public long getPaid() {
+    long totalPaid = 0;
+    for(POSTransaction payment : payments) {
+      if(payment instanceof POSPayment && !((POSPayment) payment).isVoided()) {
+        totalPaid += payment.getAmount();
+      } else if(payment instanceof POSRefund) {
+        totalPaid -= payment.getAmount();
+      }
+    }
+    return totalPaid;
+  }
+  public long getUnpaid() {
+    return getTotal() - getPaid();
+  }
+
+  public boolean isOpen() {
+    return getPaid() <= 0;
+  }
+  public boolean isCompleted() {
+    return !isOpen() && getPaid() >= getTotal();
+  }
+
 
   /// <summary>
   /// manages adding a POSItem to an order. If the POSItem already exists, the quantity is just incremented
@@ -205,20 +227,14 @@ public class POSOrder {
     if(items.size() == 0 && payments.size() == 0) {
       return OrderStatus.INITIAL;
     } else {
-      long totalPaid = 0;
-      for(POSTransaction payment : payments) {
-        if(payment instanceof POSPayment) {
-          totalPaid += payment.getAmount();
-        } else if(payment instanceof POSRefund) {
-          totalPaid -= payment.getAmount();
-        }
-      }
-      if(getTotal() > 0 && totalPaid >= getTotal()) {
-        return OrderStatus.PAID;
-      } else if (totalPaid > 0) {
-        return OrderStatus.PARTIALLY_PAID;
-      } else {
+      if(isOpen()) {
         return OrderStatus.OPEN;
+      } else {
+        if(isCompleted()) {
+          return OrderStatus.PAID;
+        } else {
+          return OrderStatus.PARTIALLY_PAID;
+        }
       }
     }
   }

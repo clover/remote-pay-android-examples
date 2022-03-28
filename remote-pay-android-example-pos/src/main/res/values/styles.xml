@@ -32,6 +32,16 @@
     <item name="android:textSize">12pt</item>
   </style>
 
+  <style name="Popup.Checkout">
+    <item name="android:minWidth">880dp</item>
+    <item name="android:minHeight">500dp</item>
+    <item name="android:paddingStart">20dp</item>
+    <item name="android:paddingEnd">20dp</item>
+    <item name="android:paddingBottom">20dp</item>
+    <item name="android:paddingTop">10dp</item>
+    <item name="android:gravity">center</item>
+  </style>
+
   <style name="Popup.TransactionSettings">
     <item name="android:minWidth">880dp</item>
     <item name="android:minHeight">525dp</item>
@@ -69,6 +79,10 @@
     <item name="android:layout_marginStart">5dp</item>
     <item name="android:layout_marginEnd">10dp</item>
     <item name="android:orientation">vertical</item>
+  </style>
+  <style name="TransactionsSection.OptionText" parent="@android:style/Widget.Holo.Light">
+    <item name="android:paddingTop">6dp</item>
+    <item name="android:paddingBottom">3dp</item>
   </style>
 
   <style name="SaleTypeButton">

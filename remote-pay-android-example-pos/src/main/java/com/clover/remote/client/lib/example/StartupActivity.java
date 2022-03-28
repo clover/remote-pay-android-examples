@@ -47,6 +47,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 public class StartupActivity extends Activity {
 
@@ -54,11 +55,13 @@ public class StartupActivity extends Activity {
   public static final String EXAMPLE_APP_NAME = "EXAMPLE_APP";
   public static final String LAN_PAY_DISPLAY_URL = "LAN_PAY_DISPLAY_URL";
   public static final String CONNECTION_MODE = "CONNECTION_MODE";
+  public static final String RAID_ID = "RAID_ID";
   public static final String USB = "USB";
   public static final String GMC = "GMC";
   public static final String LAN = "LAN";
   private static final int BARCODE_READER_REQUEST_CODE = 1;
   public static final String WS_CONFIG = "WS";
+  private static final Pattern raidPattern = Pattern.compile("[A-Z0-9]{13}.[A-Z0-9]{13}", Pattern.CASE_INSENSITIVE);
 
   // Clover devices do not always support the custom Barcode scanner implemented here.
   // They DO have a different capability to scan barcodes.
@@ -109,6 +112,10 @@ public class StartupActivity extends Activity {
     });
 
     // initialize...
+    TextView raidView = (TextView) findViewById(R.id.appRAIDInput);
+    String raidVal = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE).getString(RAID_ID, "2HDHNM86CEJBJ.V46N2S4XEQ6R8");
+    raidView.setText(raidVal);
+
     TextView textView = (TextView) findViewById(R.id.lanPayDisplayAddress);
     String url = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE).getString(LAN_PAY_DISPLAY_URL, "wss://192.168.1.101:12345/remote_pay");
 
@@ -235,17 +242,38 @@ public class StartupActivity extends Activity {
   }
 
   private void connect(URI uri, String config, boolean clearToken) {
+    String raidStr = ((TextView) findViewById(R.id.appRAIDInput)).getText().toString();
+    String raid = parseValidateAndStoreRAID(raidStr);
+
     Intent intent = new Intent();
     intent.setClass(this, ExamplePOSActivity.class);
 
-    if (config.equals("USB") || config.equals("GMC") || (config.equals(WS_CONFIG) && uri != null)) {
+    if ((config.equals("USB") || config.equals("GMC") || (config.equals(WS_CONFIG) && uri != null)) && raid != null) {
       intent.putExtra(ExamplePOSActivity.EXTRA_CLOVER_CONNECTOR_CONFIG, config);
       intent.putExtra(ExamplePOSActivity.EXTRA_CLEAR_TOKEN, clearToken);
       intent.putExtra(ExamplePOSActivity.EXTRA_WS_ENDPOINT, uri);
+      intent.putExtra(ExamplePOSActivity.EXTRA_RAID_ID, raid);
       startActivity(intent);
     }
   }
 
+  private String parseValidateAndStoreRAID(String raidStr) {
+    SharedPreferences prefs = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = prefs.edit();
+
+    if(raidStr != null && raidPattern.matcher(raidStr).matches()) {
+      editor.putString(RAID_ID, raidStr);
+      editor.apply();
+      return raidStr;
+    } else {
+      Log.e(TAG, "Invalid RAID. Missing or does not match expected RAID pattern");
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle("Error");
+      builder.setMessage("Invalid RAID supplied");
+      builder.show();
+      return null;
+    }
+  }
   private URI parseValidateAndStoreURI(String uriStr) {
     try {
       SharedPreferences prefs = this.getSharedPreferences(EXAMPLE_APP_NAME, Context.MODE_PRIVATE);

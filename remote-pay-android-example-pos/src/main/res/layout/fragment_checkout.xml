@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Popup.Checkout"
+    tools:context=".CheckoutFragment">
+
+    <TextView
+        android:id="@+id/SplitAmountTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center_horizontal"
+        android:text="Full Amount"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Holo.Large"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/SplitAmountVal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="$0.00"
+        android:textColor="@color/gray_60"
+        android:textSize="72sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_margin="25dp"
+        android:layout_weight="1">
+
+        <RadioGroup
+            android:id="@+id/SplitTypeGroup1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/SplitTypeFull"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="20dp"
+                android:tag="1"
+                android:text="@string/splitFull"
+                android:textColor="@drawable/textcolor_selector"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:id="@+id/SplitType2"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="20dp"
+                android:tag="2"
+                android:text="@string/split2"
+                android:textColor="@drawable/textcolor_selector"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:id="@+id/SplitType3"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="20dp"
+                android:tag="3"
+                android:text="@string/split3"
+                android:textColor="@drawable/textcolor_selector"
+                android:textSize="24sp" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/SplitTypeGroup2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/SplitType4"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="20dp"
+                android:tag="4"
+                android:text="@string/split4"
+                android:textColor="@drawable/textcolor_selector"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:id="@+id/SplitType5"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="20dp"
+                android:tag="5"
+                android:text="@string/split5"
+                android:textColor="@drawable/textcolor_selector"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:id="@+id/SplitType6"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="20dp"
+                android:tag="6"
+                android:text="@string/split6"
+                android:textColor="@drawable/textcolor_selector"
+                android:textSize="24sp" />
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/CheckoutButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/CheckoutCancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border"
+            android:padding="20dp"
+            android:text="@string/cancel"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/CheckoutPayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_green"
+            android:padding="20dp"
+            android:text="@string/pay"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

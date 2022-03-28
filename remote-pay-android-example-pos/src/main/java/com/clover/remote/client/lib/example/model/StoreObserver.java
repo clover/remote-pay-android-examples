@@ -29,5 +29,6 @@ public interface StoreObserver {
   public abstract void preAuthRemoved(POSPayment payment);
   public abstract void pendingPaymentsRetrieved(List<PendingPaymentEntry> pendingPayments);
   public abstract void transactionsChanged(List<POSTransaction> transactions);
+  public default void newMessageAdded(POSMessage msg) {};
 }
 

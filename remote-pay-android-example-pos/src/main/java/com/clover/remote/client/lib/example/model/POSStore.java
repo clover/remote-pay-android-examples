@@ -42,6 +42,7 @@ public class POSStore {
   private List<POSTransaction> transactions;
   private List<POSTransaction> refunds;
   private List<POSPayment> preAuths;
+  private List<POSMessage> messages;
   private POSOrder currentOrder;
 
   private transient Map<String, POSOrder> orderIdToOrder = new HashMap<String, POSOrder>();
@@ -74,6 +75,7 @@ public class POSStore {
   private TipSuggestion tipSuggestion2 = null;
   private TipSuggestion tipSuggestion3 = null;
   private TipSuggestion tipSuggestion4 = null;
+  private Boolean presentQrcOnly;
 
   public POSStore() {
     availableItems = new LinkedHashMap<String, POSItem>();
@@ -83,6 +85,7 @@ public class POSStore {
     refunds = new ArrayList<POSTransaction>();
     preAuths = new ArrayList<POSPayment>();
     transactions = new ArrayList<POSTransaction>();
+    messages = new ArrayList<POSMessage>();
   }
 
   public void createOrder(boolean userInitiated) {
@@ -434,5 +437,20 @@ public class POSStore {
 
   public void setAutomaticPaymentConfirmation(Boolean automaticPaymentConfirmation) {
     this.automaticPaymentConfirmation = automaticPaymentConfirmation;
+  }
+
+  public Boolean getPresentQrcOnly() { return presentQrcOnly; }
+
+  public void setPresentQrcOnly(Boolean presentQrcOnly) {
+    this.presentQrcOnly = presentQrcOnly;
+  }
+
+  public List<POSMessage> getMessages() { return messages; }
+
+  public void addMessage(POSMessage msg) {
+    messages.add(msg);
+    for(StoreObserver so : storeObservers) {
+      so.newMessageAdded(msg);
+    }
   }
 }

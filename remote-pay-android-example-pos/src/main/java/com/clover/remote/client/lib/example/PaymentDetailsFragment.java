@@ -288,7 +288,7 @@ public class PaymentDetailsFragment extends Fragment implements AdjustTipFragmen
     }
     else{
       title.setText("Manual Refund Details");
-      absoluteTotal.setText(CurrencyUtils.convertToString(((POSPayment)transaction).getAmountWithAdditionalCharges()));
+      absoluteTotal.setText(CurrencyUtils.convertToString(transaction.getAmount()));
       disableView(refund);
       disableView(voidPayment);
       disableView(addTip);

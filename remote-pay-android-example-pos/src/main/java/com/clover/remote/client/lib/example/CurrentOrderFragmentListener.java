@@ -17,11 +17,10 @@
 package com.clover.remote.client.lib.example;
 
 public interface CurrentOrderFragmentListener {
-  public void onSaleClicked();
+
+  public void onMakePay(TransactionSettingsFragment.transactionTypes requestType, long amount);
 
   public void onNewOrderClicked();
-
-  public void onAuthClicked();
 
   public void onSelectLineItem();
 
