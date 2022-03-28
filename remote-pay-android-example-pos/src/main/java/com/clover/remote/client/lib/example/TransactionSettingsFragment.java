@@ -64,7 +64,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
   List<CurrentOrderFragmentListener> listeners = new ArrayList<CurrentOrderFragmentListener>(5);
   private View view;
   private Switch manualSwitch, swipeSwitch, chipSwitch, contactlessSwitch, printingSwitch, disableReceiptOptionsSwitch, disableDuplicateCheckSwitch, automaticSignatureConfirmationSwitch, automaticPaymentConfirmationSwitch, disableRestartTransactionOnFailSwitch;
-  private RadioGroup allowOfflineRG, forceOfflineRG, approveOfflineNoPromptRG, signatureEntryLocationRG;
+  private RadioGroup allowOfflineRG, forceOfflineRG, approveOfflineNoPromptRG, signatureEntryLocationRG, presentQrcOnlyRG;
   private Spinner tipModeSpinner, signatureEntryLocationSpinner;
   private EditText tipAmountText, signatureThresholdText;
   private LinearLayout tips;
@@ -119,6 +119,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
     swipeSwitch.setTag(POSStore.CARD_ENTRY_METHOD_MAG_STRIPE);
     chipSwitch.setTag(POSStore.CARD_ENTRY_METHOD_ICC_CONTACT);
     contactlessSwitch.setTag(POSStore.CARD_ENTRY_METHOD_NFC_CONTACTLESS);
+    presentQrcOnlyRG = (RadioGroup) view.findViewById(R.id.PresentQrcOnlyRG);
 
     setTipSuggestionsButton = (Button) view.findViewById(R.id.setTipSuggestionsButton);
     setTipSuggestionsButton.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +217,34 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
               }
             }
             store.setApproveOfflinePaymentWithoutPrompt(approveWOPrompt);
+          } else if(group == presentQrcOnlyRG) {
+            int checkedRadioButtonId = group.getCheckedRadioButtonId();
+            Boolean presentQrcOnly = null;
+
+            manualSwitch.setEnabled(true);
+            swipeSwitch.setEnabled(true);
+            chipSwitch.setEnabled(true);
+            contactlessSwitch.setEnabled(true);
+
+            switch (checkedRadioButtonId) {
+              case R.id.presentQrcOnlyDefault: {
+                presentQrcOnly = null;
+                break;
+              }
+              case R.id.presentQrcOnlyFalse: {
+                presentQrcOnly=  false;
+                break;
+              }
+              case R.id.presentQrcOnlyTrue: {
+                presentQrcOnly = true;
+                manualSwitch.setEnabled(false);
+                swipeSwitch.setEnabled(false);
+                chipSwitch.setEnabled(false);
+                contactlessSwitch.setEnabled(false);
+                break;
+              }
+            }
+            store.setPresentQrcOnly(presentQrcOnly);
           }
         }
       }
@@ -275,6 +304,7 @@ public class TransactionSettingsFragment extends DialogFragment implements Adapt
     allowOfflineRG.setOnCheckedChangeListener(radioGroupChangeListener);
     forceOfflineRG.setOnCheckedChangeListener(radioGroupChangeListener);
     approveOfflineNoPromptRG.setOnCheckedChangeListener(radioGroupChangeListener);
+    presentQrcOnlyRG.setOnCheckedChangeListener(radioGroupChangeListener);
 
     ArrayList<String> values = new ArrayList<>();
 

@@ -174,6 +174,19 @@
         android:id="@+id/TotalLabel"
         android:layout_gravity="right"
         android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/RemainingTotal"
+        android:text="@string/remaining_total"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+    <TextView
+        android:id="@+id/RemainingLabel"
+        android:layout_gravity="right"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
   </GridLayout>
   <LinearLayout
       android:layout_width="fill_parent"

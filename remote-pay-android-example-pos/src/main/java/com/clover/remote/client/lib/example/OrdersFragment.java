@@ -158,7 +158,7 @@ public class OrdersFragment extends Fragment implements OrderObserver {
         final ListView paymentsListView = (ListView) view.findViewById(R.id.PaymentsGridView);
         PaymentsListViewAdapter paymentsListViewAdapter = new PaymentsListViewAdapter(view.getContext(), R.id.PaymentsGridView, posOrder.getPayments());
         paymentsListView.setAdapter(paymentsListViewAdapter);
-        if(posOrder.getPayments().size() < 1 || posOrder.getStatus().toString() == "OPEN"){
+        if(!posOrder.isCompleted()){
           openInRegister.setVisibility(View.VISIBLE);
           openInRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,8 +166,7 @@ public class OrdersFragment extends Fragment implements OrderObserver {
               openInRegister(posOrder);
             }
           });
-        }
-        else if(posOrder.getPayments().size() > 0) {
+        } else {
           openInRegister.setVisibility(View.INVISIBLE);
         }
       }

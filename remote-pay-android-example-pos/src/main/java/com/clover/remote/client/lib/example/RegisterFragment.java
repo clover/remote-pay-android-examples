@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clover.remote.PendingPaymentEntry;
+import com.clover.remote.client.lib.example.model.POSMessage;
 import com.clover.remote.client.lib.example.model.POSTransaction;
 import com.clover.remote.client.lib.example.utils.AvailableDiscountListener;
 import com.clover.remote.client.lib.example.utils.IdUtils;
@@ -221,7 +222,9 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setDisablePrinting(store.getDisablePrinting());
     request.setDisableReceiptSelection(store.getDisableReceiptOptions());
     request.setDisableDuplicateChecking(store.getDisableDuplicateChecking());
+    request.setPresentQrcOnly(store.getPresentQrcOnly());
     Log.d(TAG, "PreAuthRequest: " + request.toString());
+    recordMessage(request);
     getCloverConnector().preAuth(request);
   }
 
@@ -319,10 +322,18 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   }
 
   @Override
-  public void onSaleClicked() {
+  public void onMakePay(TransactionSettingsFragment.transactionTypes requestType, long amount) {
+    if(requestType == TransactionSettingsFragment.transactionTypes.SALE) {
+      onSaleClicked(amount);
+    } else if(requestType == TransactionSettingsFragment.transactionTypes.AUTH) {
+      onAuthClicked(amount);
+    }
+  }
+
+  public void onSaleClicked(long amount) {
     String externalPaymentID = IdUtils.getNextId();
     store.getCurrentOrder().setPendingPaymentId(externalPaymentID);
-    SaleRequest request = new SaleRequest(store.getCurrentOrder().getTotal(), externalPaymentID);
+    SaleRequest request = new SaleRequest(amount, externalPaymentID);
     request.setCardEntryMethods(store.getCardEntryMethods());
     request.setAllowOfflinePayment(store.getAllowOfflinePayment());
     request.setForceOfflinePayment(store.getForceOfflinePayment());
@@ -339,6 +350,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    request.setPresentQrcOnly(store.getPresentQrcOnly());
     setTipSuggestions(request);
 
     if(vaulted){
@@ -346,6 +358,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     }
 
     Log.d(TAG, "SaleRequest: " + request.toString());
+    recordMessage(request);
     getCloverConnector().sale(request);
   }
 
@@ -395,11 +408,10 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
   }
 
 
-  @Override
-  public void onAuthClicked() {
+  public void onAuthClicked(long amount) {
     String externalPaymentID = IdUtils.getNextId();
     store.getCurrentOrder().setPendingPaymentId(externalPaymentID);
-    AuthRequest request = new AuthRequest(store.getCurrentOrder().getTotal(), externalPaymentID);
+    AuthRequest request = new AuthRequest(amount, externalPaymentID);
     request.setCardEntryMethods(store.getCardEntryMethods());
     request.setAllowOfflinePayment(store.getAllowOfflinePayment());
     request.setForceOfflinePayment(store.getForceOfflinePayment());
@@ -414,12 +426,14 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setDisableRestartTransactionOnFail(store.getDisableRestartTransactionOnFail());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    request.setPresentQrcOnly(store.getPresentQrcOnly());
 
     if(vaulted){
       addVaultedCardToRequest(request);
     }
 
     Log.d(TAG, "AuthRequest: " + request.toString());
+    recordMessage(request);
     getCloverConnector().auth(request);
   }
 
@@ -435,7 +449,14 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     car.setAmount(store.getCurrentOrder().getTotal());
     car.setTipAmount(store.getTipAmount());
     Log.d(TAG, "CapturePreAuthRequest: " + car.toString());
+    recordMessage(car);
     getCloverConnector().capturePreAuth(car);
+  }
+
+  public void onPartiallyPaid() {
+    setVaulted(false);
+    CurrentOrderFragment currentOrderFragment = ((CurrentOrderFragment) getChildFragmentManager().findFragmentById(R.id.PendingOrder));
+    currentOrderFragment.onPartialPayment();
   }
 
   @Override
@@ -464,6 +485,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     @Override
     public void newOrderCreated(POSOrder order, boolean userInitiated) {
       if (getCloverConnector() != null && userInitiated) {
+        recordMessage("ShowWelcomeScreen");
         getCloverConnector().showWelcomeScreen();
       }
       liToDli.clear();
@@ -518,6 +540,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
       items.add(dli);
       displayOrder.setLineItems(items);
       updateTotals(posOrder, displayOrder);
+      recordMessage(displayOrder);
       getCloverConnector().showDisplayOrder(displayOrder);
 
     }
@@ -542,6 +565,7 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
 
       displayOrder.setLineItems(items);
       updateTotals(posOrder, displayOrder);
+      recordMessage(displayOrder);
       getCloverConnector().showDisplayOrder(displayOrder);
     }
 
@@ -559,7 +583,8 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
       }
       dli.setDiscounts(dDiscounts);
       updateTotals(posOrder, displayOrder);
-      getCloverConnector() .showDisplayOrder(displayOrder);
+      recordMessage(displayOrder);
+      getCloverConnector().showDisplayOrder(displayOrder);
 
     }
 
@@ -607,4 +632,10 @@ public class RegisterFragment extends Fragment implements CurrentOrderFragmentLi
     }
   }
 
+  private void recordMessage(String msgName) {
+    ((ExamplePOSActivity)getActivity()).recordMessage(msgName);
+  }
+  private void recordMessage(Object reqRes) {
+    ((ExamplePOSActivity)getActivity()).recordMessage(reqRes);
+  }
 }

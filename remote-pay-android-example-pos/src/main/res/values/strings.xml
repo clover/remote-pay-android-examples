@@ -256,5 +256,17 @@
   <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="request_signature">Request Signature</string>
   <string name="request_tip">Request Tip</string>
+  <string name="app_raid">2HDHNM86CEJBJ.V46N2S4XEQ6R8</string>
+  <string name="app_raid_text">RemoteApplicationID:</string>
+  <string name="splitFull">Full Amount</string>
+  <string name="split2">2 Ways</string>
+  <string name="split3">3 Ways</string>
+  <string name="split4">4 Ways</string>
+  <string name="split5">5 Ways</string>
+  <string name="split6">6 Ways</string>
+  <string name="splitTextTemplate">%d Way Split Amount</string>
+  <string name="remaining_total">Remaining Total:</string>
+  <string name="req_res_log">View Request/Response Logs</string>
+  <string name="present_qrc_only">Present QRC Only</string>
 
 </resources>

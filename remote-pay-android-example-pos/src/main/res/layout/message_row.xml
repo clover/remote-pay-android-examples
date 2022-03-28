@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+  <TextView
+      android:id="@+id/MessageRowTimeColumn"
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:text="TextView" />
+
+  <TextView
+      android:id="@+id/MessageRowSrcColumn"
+      android:layout_width="75dp"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:text="TextView" />
+
+  <TextView
+      android:id="@+id/MessageRowMessageColumn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="TextView" />
+</LinearLayout>

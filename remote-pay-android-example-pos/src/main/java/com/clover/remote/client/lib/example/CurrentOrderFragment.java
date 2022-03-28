@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class CurrentOrderFragment extends Fragment implements OrderObserver, ChooseSaleTypeFragment.ChooseSaleTypeListener, EnterTipFragment.EnterTipDialogFragmentListener{
+public class CurrentOrderFragment extends Fragment implements OrderObserver, ChooseSaleTypeFragment.ChooseSaleTypeListener, EnterTipFragment.EnterTipDialogFragmentListener, CheckoutFragment.SplitTypeListener {
   private static final String TAG = CurrentOrderFragment.class.getSimpleName();
   private POSStore store;
   private View v;
@@ -64,6 +64,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
   private boolean vaulted = false;
   private POSCard vaultedCard;
   POSOrder order = new POSOrder();
+  private long requestedAmount = 0;
   private WeakReference<ICloverConnector> cloverConnectorWeakReference;
   List<CurrentOrderFragmentListener> listeners = new ArrayList<CurrentOrderFragmentListener>(5);
   private OnFragmentInteractionListener mListener;
@@ -133,7 +134,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
            showEnterTipDialog();
           }
           else {
-            showChooseSaleType();
+            showCheckoutDialog();
           }
         }
         else{
@@ -189,6 +190,13 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     enterTipFragment.show(fm, "fragment_enter_tip");
   }
 
+  private void showCheckoutDialog() {
+    FragmentManager fm = getFragmentManager();
+    CheckoutFragment checkoutFragment = CheckoutFragment.newInstance(order.getUnpaid());
+    checkoutFragment.addListener(this);
+    checkoutFragment.show(fm, "fragment_checkout");
+  }
+
   private void showChooseSaleType() {
     FragmentManager fm = getFragmentManager();
     ChooseSaleTypeFragment chooseSaleTypeFragment = ChooseSaleTypeFragment.newInstance();
@@ -199,18 +207,6 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
   private void onNewOrderClicked() {
     for (CurrentOrderFragmentListener listener : listeners) {
       listener.onNewOrderClicked();
-    }
-  }
-
-  private void onSaleClicked() {
-    for (CurrentOrderFragmentListener listener : listeners) {
-      listener.onSaleClicked();
-    }
-  }
-
-  private void onAuthClicked() {
-    for (CurrentOrderFragmentListener listener : listeners) {
-      listener.onAuthClicked();
     }
   }
 
@@ -283,6 +279,15 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
           else{
             ((TextView) getView().findViewById(R.id.DiscountsLabel)).setText("");
           }
+
+          ((TextView) getView().findViewById(R.id.RemainingLabel)).setText(CurrencyUtils.format(order.getUnpaid(), Locale.getDefault()));
+          if(!order.isOpen() && !order.isCompleted()) {
+            getView().findViewById(R.id.RemainingTotal).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.RemainingLabel).setVisibility(View.VISIBLE);
+          } else {
+            getView().findViewById(R.id.RemainingTotal).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.RemainingLabel).setVisibility(View.INVISIBLE);
+          }
         }
       });
     }
@@ -315,6 +320,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
     request.setTipAmount(store.getTipAmount());
     request.setAutoAcceptPaymentConfirmations(store.getAutomaticPaymentConfirmation());
     request.setAutoAcceptSignature(store.getAutomaticSignatureConfirmation());
+    request.setPresentQrcOnly(store.getPresentQrcOnly());
     request.setVaultedCard(vaulted);
     Log.d(TAG, "Vaulted Sale Request: "+ request);
     cloverConnectorWeakReference.get().sale(request);
@@ -323,23 +329,28 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
 
   @Override
   public void onSaleTypeChoice(final String choice) {
+    TransactionSettingsFragment.transactionTypes saleType = choice == "Sale" ? TransactionSettingsFragment.transactionTypes.SALE : TransactionSettingsFragment.transactionTypes.AUTH;
     showTransactionSettings(new Runnable() {
       @Override
       public void run() {
-        if(choice == "Sale") {
-          onSaleClicked();
+        for (CurrentOrderFragmentListener listener : listeners) {
+          listener.onMakePay(saleType, requestedAmount);
         }
-        else if (choice == "Auth"){
-          onAuthClicked();
-        }
+        requestedAmount = 0;
       }
-    }, choice == "Sale" ? TransactionSettingsFragment.transactionTypes.SALE : TransactionSettingsFragment.transactionTypes.AUTH);
+    }, saleType);
   }
 
   @Override
   public void onContinue(long amount) {
     store.setTipAmount(amount);
     payWithPreAuth();
+  }
+
+  @Override
+  public void onSplitTypeAmount(long amount) {
+    requestedAmount = amount;
+    showChooseSaleType();
   }
 
   private void payWithPreAuth(){
@@ -431,4 +442,7 @@ public class CurrentOrderFragment extends Fragment implements OrderObserver, Cho
 
   }
 
+  public void onPartialPayment() {
+    showCheckoutDialog();
+  }
 }
